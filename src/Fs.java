@@ -2,6 +2,7 @@
  * @author xnacly
  * Fs - filesystem interaction
  */
+import product.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -60,11 +61,11 @@ public class Fs {
             if(Objects.equals(sl[2].toLowerCase(), "papier")){
                 p = new Papier("Papier", sl[3], sl[4]);
             } else if(Objects.equals(sl[2].toLowerCase(), "stein")){
-                p = new Papier("Stein", sl[3], sl[4]);
+                p = new Stein("Stein", sl[3], sl[4]);
             } else if(Objects.equals(sl[2].toLowerCase(), "holz")){
-                p = new Papier("Stein", sl[3], sl[4]);
+                p = new Holz("Holz", sl[3], sl[4]);
             } else {
-                // !this skips orders with no known Product type!
+                // !this skips orders with no known Product.Product type!
                 continue;
             }
 

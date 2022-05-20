@@ -1,3 +1,5 @@
+import product.Product;
+
 public class Order {
     boolean insertOrder;
     Product product;
@@ -13,6 +15,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return this.id + ": " + this.product.name + " " + this.price;
+        return this.id + ": " + this.product.toString() + " " + this.price;
     }
 }
