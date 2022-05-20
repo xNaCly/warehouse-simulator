@@ -59,11 +59,11 @@ public class Fs {
             Product p;
 
             if(Objects.equals(sl[2].toLowerCase(), "papier")){
-                p = new Papier("Papier", sl[3], sl[4]);
+                p = new Papier(sl[3], sl[4]);
             } else if(Objects.equals(sl[2].toLowerCase(), "stein")){
-                p = new Stein("Stein", sl[3], sl[4]);
+                p = new Stein(sl[3], sl[4]);
             } else if(Objects.equals(sl[2].toLowerCase(), "holz")){
-                p = new Holz("Holz", sl[3], sl[4]);
+                p = new Holz(sl[3], sl[4]);
             } else {
                 // !this skips orders with no known Product.Product type!
                 continue;

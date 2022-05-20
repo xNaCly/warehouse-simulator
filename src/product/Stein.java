@@ -18,9 +18,8 @@ public class Stein extends Product {
     SteinType steinType;
     SteinWeight steinWeight;
 
-    public Stein(String name, String type, String weight){
-        super(name);
-
+    public Stein(String type, String weight){
+        this.name = "Stein";
         if(Objects.equals(type.toLowerCase(), "marmor")){
             this.steinType = SteinType.MARMOR;
         } else if(Objects.equals(type.toLowerCase(), "granit")){

@@ -2,8 +2,7 @@ package product;
 
 public class Product {
     String name;
-    public Product(String name) {
-        this.name = name;
+    public Product() {
     }
 
     @Override

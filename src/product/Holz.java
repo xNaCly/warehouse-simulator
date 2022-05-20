@@ -15,19 +15,10 @@ enum HolzForm {
 }
 
 public class Holz extends Product {
-    public HolzType getType() {
-        return holzType;
-    }
-
-    public void setType(HolzType holzType) {
-        this.holzType = holzType;
-    }
-
-
     HolzType holzType;
     HolzForm holzForm;
-    public Holz(String name, String type, String form){
-        super(name);
+    public Holz(String type, String form){
+        this.name = "Holz";
 
         if(Objects.equals(type.toLowerCase(), "kiefer")){
             this.holzType = HolzType.KIEFER;

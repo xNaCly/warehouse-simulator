@@ -17,8 +17,8 @@ public class Papier extends Product {
     PapierSize papierSize;
     PapierColor papierColor;
 
-    public Papier(String name, String color, String size) {
-        super(name);
+    public Papier(String color, String size) {
+        this.name = "Papier";
 
         if(Objects.equals(color.toLowerCase(), "blau")){
             this.papierColor = PapierColor.BLUE;
