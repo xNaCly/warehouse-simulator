@@ -1,19 +1,19 @@
 import java.util.Objects;
 
-enum Color {
-    WHITE,
-    GREEN,
-    BLUE,
-}
-enum Size {
-    A3,
-    A4,
-    A5
-}
 public class Papier extends Product {
     Size size;
     Color color;
 
+    enum Color {
+        WHITE,
+        GREEN,
+        BLUE,
+    }
+    enum Size {
+        A3,
+        A4,
+        A5
+    }
 
     public Papier(String name, String color, String size) {
         super(name);
