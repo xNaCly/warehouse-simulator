@@ -27,6 +27,14 @@ public class Stein extends Product {
         } else {
             this.steinType = SteinType.SANDSTEIN;
         }
+
+        if(Objects.equals(weight.toLowerCase(), "mittel")){
+            this.steinWeight = SteinWeight.MIDDLE;
+        } else if(Objects.equals(weight.toLowerCase(), "schwer")){
+            this.steinWeight = SteinWeight.HEAVY;
+        } else {
+            this.steinWeight = SteinWeight.LIGHT;
+        }
     }
 
     public SteinType getSteinType() {
@@ -43,5 +51,10 @@ public class Stein extends Product {
 
     public void setSteinWeight(SteinWeight steinWeight) {
         this.steinWeight = steinWeight;
+    }
+
+    @Override
+    public String toString(){
+        return this.name + " | " + this.steinType + " | " + this.steinWeight;
     }
 }

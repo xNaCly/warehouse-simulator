@@ -52,4 +52,9 @@ public class Holz extends Product {
     public void setHolzForm(HolzForm holzForm) {
         this.holzForm = holzForm;
     }
+
+    @Override
+    public String toString(){
+        return this.name + " | " + this.holzType + " | " + this.holzForm;
+    }
 }

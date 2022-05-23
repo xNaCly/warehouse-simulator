@@ -53,4 +53,9 @@ public class Papier extends Product {
     public void setPapierColor(PapierColor papierColor) {
         this.papierColor = papierColor;
     }
+
+    @Override
+    public String toString(){
+        return this.name + " | " + this.papierColor + " | " + this.papierSize;
+    }
 }
