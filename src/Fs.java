@@ -20,60 +20,61 @@ public class Fs {
         this.file = new File(path);
     }
 
-    private boolean isFile(){
+    public boolean isFile(){
         return this.file.exists() && this.file.canRead();
     }
 
-    private ArrayList<String> getLines(){
-        ArrayList<String> lines = new ArrayList<>();
+    /**
+     * parse file.csv contents into Orders arraylist
+     * @return ArrayList<Order>
+     */
+    public ArrayList<Order> parseOrders(){
+        ArrayList<Order> orders = new ArrayList<>();
         if(this.isFile()){
             try{
                 Scanner sc = new Scanner(this.file);
+                int counter = 0;
                 while(sc.hasNextLine()){
-                    lines.add(sc.nextLine());
+                    String line = sc.nextLine();
+
+                    if(line.startsWith("Auftrag")) continue;
+                    Order o = this.parseCSV(line);
+                    orders.add(o);
                 }
             } catch (FileNotFoundException e){
                 System.out.printf("File %s not found\n", this.file.getName());
                 e.printStackTrace();
             }
         }
-        return lines;
+        return orders;
     }
 
     /**
-     * Parses file passed to the Fs initialiser. The parser skips orders with an unknown product type.
-     * @return parsed ArrayList of Orders
+     * Parses line separated by ';' into Order datastructure
+     * @return parsed Order
      */
-    public ArrayList<Order> parseCSV(){
-        ArrayList<Order> orders = new ArrayList<>();
-        ArrayList<String> lines = this.getLines();
+    private Order parseCSV(String line){
+        String[] sl = line.split(";");
 
-        lines.remove(0); // remove header row
+        // convert csv data to correct types
+        int index = Integer.parseInt(sl[0]);
+        boolean orderType = Objects.equals(sl[1], "Einlagerung");
+        Product p;
 
-        for(String i : lines){
-            String[] sl = i.split(";");
-
-            // convert csv data to correct types
-            int index = Integer.parseInt(sl[0]);
-            boolean orderType = Objects.equals(sl[1], "Einlagerung");
-            Product p;
-
-            if(Objects.equals(sl[2].toLowerCase(), "papier")){
-                p = new Papier(sl[3], sl[4]);
-            } else if(Objects.equals(sl[2].toLowerCase(), "stein")){
-                p = new Stein(sl[3], sl[4]);
-            } else if(Objects.equals(sl[2].toLowerCase(), "holz")){
-                p = new Holz(sl[3], sl[4]);
-            } else {
-                // !this skips orders with no known Product.Product type!
-                continue;
-            }
-
-            int price = Integer.parseInt(sl[5]);
-
-            Order o = new Order(index, orderType, p, price);
-            orders.add(o);
+        if(Objects.equals(sl[2].toLowerCase(), "papier")){
+            p = new Papier(sl[3], sl[4]);
+        } else if(Objects.equals(sl[2].toLowerCase(), "stein")){
+            p = new Stein(sl[3], sl[4]);
+        } else if(Objects.equals(sl[2].toLowerCase(), "holz")){
+            p = new Holz(sl[3], sl[4]);
+        } else {
+            p = new Product();
+            p.setName("Unknown");
         }
-        return orders;
+
+        int price = Integer.parseInt(sl[5]);
+
+        Order o = new Order(index, orderType, p, price);
+        return o;
     }
 }

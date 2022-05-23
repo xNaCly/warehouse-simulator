@@ -4,7 +4,7 @@
 public class Start {
     public static void main(String[] args){
         Fs fs = new Fs("../Leistungsnachweis.csv");
-        for(Order o : fs.parseCSV())
+        for(Order o : fs.parseOrders())
             System.out.println(o);
     }
 }
