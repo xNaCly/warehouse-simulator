@@ -1,5 +1,7 @@
+import product.Product;
+
 public class Lager{
-    Order[][] lager;
+    Product[][] lager;
     public Lager(){
 
     }
