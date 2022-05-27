@@ -33,14 +33,13 @@ public class Fs {
         if(this.isFile()){
             try{
                 Scanner sc = new Scanner(this.file);
-                int counter = 0;
                 while(sc.hasNextLine()){
                     String line = sc.nextLine();
-
                     if(line.startsWith("Auftrag")) continue;
                     Order o = this.parseCSV(line);
                     orders.add(o);
                 }
+                sc.close();
             } catch (FileNotFoundException e){
                 System.out.printf("File %s not found\n", this.file.getName());
                 e.printStackTrace();
