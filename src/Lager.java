@@ -28,8 +28,8 @@ public class Lager{
         return true;
     }
 
-    // TODO: 
-    public boolean rearrange(){
+    // TODO: implement; change to public 
+    private boolean rearrange(){
         return false;
     }
 

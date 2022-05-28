@@ -54,6 +54,11 @@ public class Stein extends Product {
     }
 
     @Override
+    public String getNameAndProperty(){
+        return this.name + ":" + this.steinWeight;
+    }
+
+    @Override
     public String toString(){
         return this.name + " | " + this.steinType + " | " + this.steinWeight;
     }
