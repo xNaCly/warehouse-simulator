@@ -8,8 +8,14 @@ public class Lager{
         this.balance = balance;
     }
 
-    public boolean insert(Order o, int posX, int posY, int posZ){
-        String feedback = String.format("%s: %d", o.product.toString(), o.price);
+    public boolean update(Order o,  int posX, int posY, int posZ){
+        if(o.insertOrder) this.insert(o, posX, posY, posZ);
+        else this.remove(o, posX, posY, posZ);
+        return false;
+    }
+
+    private boolean insert(Order o, int posX, int posY, int posZ){
+        String feedback = String.format("%s: %d", o.product.getNameAndProperty(), o.price);
         if(this.lager[posZ][posY][posZ] != null){
             return false;
         }
@@ -18,7 +24,7 @@ public class Lager{
         return true;
     }
 
-    public boolean remove(Order o, int posX, int posY, int posZ){
+    private boolean remove(Order o, int posX, int posY, int posZ){
         String feedback = String.format("%s: %d", o.product.toString(), o.price);
         if(this.lager[posZ][posY][posZ] == null){
             return false;

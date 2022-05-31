@@ -2,8 +2,8 @@ SRC_DIR := ./src
 BIN_DIR := ./bin
 FILES := $(shell find $(SRC_DIR) -name "*.java")
 
-all: build
-	cd ./bin && java Start
+all: clean build 
+	cd ./bin && java Start ../Leistungsnachweis.csv
 
 build: pre
 	javac $(FILES) -d $(BIN_DIR)
