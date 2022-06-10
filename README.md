@@ -27,10 +27,13 @@ make all
 
 #### Makefile options:
 
-Use:
+Use `CMD` to pass command arguments:
 
 ```bash
 make all CMD="--debug"
+make all CMD="--silent"
 ```
 
-to view debugging logs generated from ws.
+## Cli reference:
+- `-s` / `--silent` to suppress any logs (except errors)
+- `-d` / `--debug` to display debug logs
