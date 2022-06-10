@@ -7,7 +7,7 @@ public class Lager{
         this.balance = balance;
     }
 
-    public boolean update(Order o,  int posX, int posY, int posZ){
+    public boolean update(Order o, int posX, int posY, int posZ){
         if(o.insertOrder) this.insert(o, posX, posY, posZ);
         else this.remove(o, posX, posY, posZ);
         return false;
@@ -18,7 +18,13 @@ public class Lager{
         String prodName;
         String prodAtt;
 
-        String pr = o.product.getNameAndProperty();
+        // check if the selected slot is block by a pallet in the front shelf
+        if(posZ != 0 && this.lager[0][posY][posX] != null){
+            Logger.err("Slot at coords z:" + posZ + ", y: " + posY + ", x: " + posX + " blocked by a pallet in front of it");
+            return false;
+        }
+
+        String pr = o.product.getNameAndProperty(); 
         if(pr.contains(":")) {
             String[] prod = pr.split(":");
             Logger.debug(o.product.getNameAndProperty(), 22, "Lager.java");
@@ -29,7 +35,7 @@ public class Lager{
             prodAtt = null;
         }
 
-        if(this.lager[posZ][posY][posZ] != null){
+        if(this.lager[posZ][posY][posX] != null){
             // If the slot at the selected coordinates is already occupied return false
             Logger.err("Slot at coords z:" + posZ + ", y: " + posY + ", x: " + posX + " already occupied");
             return false;
@@ -60,7 +66,7 @@ public class Lager{
             }
         }
 
-        this.lager[posZ][posY][posZ] = o.product;
+        this.lager[posZ][posY][posX] = o.product;
         this.balance.updateBalance(o.price, feedback, false);
         Logger.suc("Inserted Order with id: " + o.id);
         return true;
@@ -87,13 +93,12 @@ public class Lager{
     }
 
     // TODO: implement; change to public
-    // should probably work with
     private boolean rearrange(){
         return false;
     }
 
     public Product getSlot(int posX, int posY, int posZ){
-        Product p = this.lager[posZ][posY][posZ];
+        Product p = this.lager[posZ][posY][posX];
         if(p != null) {
             Logger.suc("Query ["+ posZ + "][" + posY + "][" + posX + "] returned " + p.toString());
         } else {
