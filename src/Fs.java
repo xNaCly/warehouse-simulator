@@ -41,10 +41,13 @@ public class Fs {
                 }
                 sc.close();
             } catch (FileNotFoundException e){
-                System.out.printf("File %s not found\n", this.file.getName());
+                Logger.err("File '" + this.file.getName() + "' not found or not a file");
                 e.printStackTrace();
             }
+        } else {
+            Logger.err("File '" + this.file.getName() + "' not found or not a file");
         }
+        Logger.inf("Loaded and parsed " + orders.size() + " Products");
         return orders;
     }
 
@@ -69,6 +72,7 @@ public class Fs {
         } else {
             p = new Product();
             p.setName("Unknown");
+            Logger.err("Product at index: " + (index+1) + " is unknown");
         }
 
         int price = Integer.parseInt(sl[5]);
