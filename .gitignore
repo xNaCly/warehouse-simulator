@@ -23,6 +23,8 @@
 hs_err_pid*
 
 # intellij
+.idea
+warehouse-simulator.iml
 out/
 .metadata/
 
