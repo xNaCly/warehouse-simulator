@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Gui extends JPanel {
@@ -7,8 +8,8 @@ public class Gui extends JPanel {
     Lager l; 
     Balance b;
     ArrayList<Order> o;
-    ArrayList<String> os;
     String filepath;
+    int currentOrder = 0;
 
     public Gui(String pathCSV) {
         this.rootWin = new JFrame("Warehouse");
@@ -28,26 +29,24 @@ public class Gui extends JPanel {
     }
 
     public void start(){
-        this.rootWin.setVisible(true);
         this.loadOrders();
+        this.rootWin.setVisible(true);
     }
 
     private void loadOrders(){
         Fs fs = new Fs(this.filepath);
         this.o = fs.parseOrders();
-        this.os = new ArrayList<>();
-        JLabel label = new JLabel();
-        String orders = "</html><ul>\n";
-        for(Order _o : this.o){
-            orders += "<li>"+_o.toString()+"</li>\n";
-        }
-        orders += "</ul>\n</html>";
-        System.out.println(orders);
+        JLabel label = new JLabel("Text");
+        label.setFont(new Font("monospace", Font.PLAIN, 14));
         label.setVerticalAlignment(SwingConstants.CENTER);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         this.rootWin.add(label);
-        label.setText(orders);
         this.rootWin.pack();
+    }
+
+    private void showBalanceWindow(){
+        this.childWin = new JFrame("Warehose - Bilanz");
+
     }
 
     public void showError(String text){
