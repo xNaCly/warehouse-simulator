@@ -10,11 +10,11 @@ public class Start {
         Logger.debug = Start.debug;
         Logger.silent = Start.silent;
 
-        new Gui();
+        if(!Start.headless) new Gui();
     }
 
     /**
-     * parses the '-d' / '--debug' flag and the path to the .csv file which contains the orders
+     * parses the '--debug', '--silent' and '--headless' flags and the path to the .csv file which contains the orders
      * @param args arguments which are passed to the tool by the operating system
      */
     static void parseArgs(String[] args){
