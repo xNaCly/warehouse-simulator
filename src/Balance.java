@@ -9,7 +9,7 @@ public class Balance {
     }
 
     public void updateBalance(int amount, String log, boolean remove){
-        transactions.add(log);
+        transactions.add("("+ (transactions.size()+1) +") "+log);
         if(remove) this.balance -= amount;
         else this.balance += amount;
     }

@@ -13,6 +13,10 @@ public class Product {
         return this.name;
     }
 
+    public String getNameAndProperties(){
+        return this.name;
+    }
+
     @Override
     public String toString() {
         return name;

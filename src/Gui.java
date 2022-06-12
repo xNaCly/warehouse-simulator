@@ -13,7 +13,13 @@ public class Gui {
 
         Fs fs = new Fs(Start.path);
         ArrayList<Order> o = fs.parseOrders();
-        this.start();
+        this.l.update(o.get(1), 0, 0, 0);
+        this.l.getSlot(0,0,0);
+        this.l.update(o.get(27), 0, 0, 0);
+        Logger.debug("Balance: " + this.b.getBalance(), 19, "Gui.java");
+        for(String s : this.b.getTransactions())
+            System.out.println(s);
+        // this.start();
     }
 
     private void start(){

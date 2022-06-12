@@ -54,8 +54,12 @@ public class Papier extends Product {
         this.papierColor = papierColor;
     }
 
+    public String getNameAndProperties(){
+        return this.name + ":" + this.papierSize + ":" + this.papierColor;
+    }
+
     @Override
     public String toString(){
-        return this.name + " | " + this.papierColor + " | " + this.papierSize;
+        return this.name;
     }
 }

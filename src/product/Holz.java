@@ -58,8 +58,12 @@ public class Holz extends Product {
         return this.name + ":" + this.holzType;
     }
 
+    public String getNameAndProperties(){
+        return this.name + ":" + this.holzType + ":" + this.holzForm;
+    }
+
     @Override
     public String toString(){
-        return this.name + " | " + this.holzType + " | " + this.holzForm;
+        return this.name;
     }
 }

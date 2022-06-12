@@ -1,4 +1,5 @@
-import product.Product;
+import product.*;
+
 public class Lager{
     Product[][][] lager = new Product[2][3][4];
     Balance balance;
@@ -14,7 +15,7 @@ public class Lager{
     }
 
     private boolean insert(Order o, int posX, int posY, int posZ){
-        String feedback = String.format("%s: %d", o.product.getNameAndProperty(), o.price);
+        String feedback = String.format("[Order: %d] %s: %d (Einlagerung)", o.id, o.product.toString(), o.price);
         String prodName;
         String prodAtt;
 
@@ -37,7 +38,7 @@ public class Lager{
 
         if(this.lager[posZ][posY][posX] != null){
             // If the slot at the selected coordinates is already occupied return false
-            Logger.err("Slot at coords z:" + posZ + ", y: " + posY + ", x: " + posX + " already occupied");
+            Logger.err("Slot ["+ posZ + "][" + posY + "][" + posX + "] already occupied");
             return false;
         } else if(prodName.equals("Holz") && prodAtt.equals("BALKEN")) {
             // WOOD of type BALKEN can only be stored by occupying two slots,
@@ -68,15 +69,22 @@ public class Lager{
 
         this.lager[posZ][posY][posX] = o.product;
         this.balance.updateBalance(o.price, feedback, false);
-        Logger.suc("Inserted Order with id: " + o.id);
+        Logger.suc("Inserted Product '" + o.product.toString() + "' with order id " + o.id + " at Slot ["+ posZ + "][" + posY + "][" + posX + "]");
         return true;
     }
 
     private boolean remove(Order o, int posX, int posY, int posZ){
-        String feedback = String.format("%s: %d", o.product.toString(), o.price);
+        String feedback = String.format("[Order: %d] %s: %d (Auslagerung)", o.id, o.product.toString(), o.price);
 
         if(this.lager[posZ][posY][posX] == null){
-            Logger.err("Slot at coords z:" + posZ + ", y: " + posY + ", x: " + posX + " is already empty");
+            Logger.err("Slot ["+ posZ + "][" + posY + "][" + posX + "] is empty");
+            return false;
+        } 
+
+        Product productAtSlot = this.lager[posZ][posY][posX];
+        // check if the products are exactly equal
+        if(!productAtSlot.getNameAndProperties().equals(o.product.getNameAndProperties())){
+            Logger.err("Product at Slot ["+ posZ + "][" + posY + "][" + posX + "] not equal to requested product");
             return false;
         }
 
@@ -87,8 +95,8 @@ public class Lager{
         }
 
         this.lager[posZ][posY][posX] = new Product();
-        this.balance.updateBalance(o.price, feedback, true);
-        Logger.suc("Removed Order with id: " + o.id);
+        this.balance.updateBalance(o.price, feedback, false);
+        Logger.suc("Removed Product '" + o.product.toString() + "' with order id " + o.id + " at Slot ["+ posZ + "][" + posY + "][" + posX + "]");
         return true;
     }
 
