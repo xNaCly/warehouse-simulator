@@ -1,3 +1,4 @@
+import java.util.Scanner;
 
 public class Start {
     static String path;
@@ -11,6 +12,7 @@ public class Start {
         Logger.silent = Start.silent;
 
         if(!Start.headless) new Gui();
+        else Start.cli();
     }
 
     /**
@@ -31,5 +33,22 @@ public class Start {
           Start.headless = true;
         }
       } catch (ArrayIndexOutOfBoundsException e) {}
+    }
+
+    static void cli(){
+      boolean status = true;
+      Scanner sc = new Scanner(System.in);
+      System.out.println("Warehouse simulator - https://github.com/xnacly");
+      while(status){
+        System.out.print("> ");
+        String cmd = sc.next();
+
+        if(cmd.equals(".exit")){
+          status = false;
+        }
+
+        System.out.println(cmd);
+      }
+      sc.close();
     }
 }
