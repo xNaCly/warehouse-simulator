@@ -6,15 +6,13 @@ public class Start {
     static boolean debug;
     static boolean silent;
     static boolean headless;
-    static boolean test;
 
     public static void main(String[] args){
         Start.parseArgs(args);
         Logger.debug = Start.debug;
         Logger.silent = Start.silent;
 
-        if(Start.test) Start.test();
-        else if(!Start.headless) new Gui();
+        if(!Start.headless) new Gui();
         else Start.cli();
     }
 
@@ -31,30 +29,18 @@ public class Start {
           Start.silent = true;
         } else if(args[1].equals("--headless") || args[1].equals("-h")){
           Start.headless = true;
-        } else if(args[1].equals("--test") || args[1].equals("-t")){
-          Start.test = true;
         } 
         if(args[2].equals("--headless") || args[2].equals("-h")){
           Start.headless = true;
-        } else if(args[2].equals("--test") || args[2].equals("-t")){
-          Start.test = true;
         }
       } catch (ArrayIndexOutOfBoundsException e) {}
     }
 
-    static void test(){
-      Fs fs = new Fs(Start.path);
-      Balance b = new Balance();
-      Lager l = new Lager(b);
-      ArrayList<Order> o = fs.parseOrders();
-      l.update(o.get(3), 0, 0, 0);
-      l.getSlot(0,0,0);
-      l.getSlot(0,0,1);
-      l.update(o.get(29), 0, 0, 0);
-      l.getSlot(0,0,0);
-      l.getSlot(0,0,1);
-    }
 
+    /**
+     * cli is an interactive shell which can be used to interact with the warehouse without the gui
+     * Invoke it with the '--headless' flag.
+     */
     static void cli(){
       boolean status = true;
       Scanner sc = new Scanner(System.in);
@@ -91,6 +77,10 @@ public class Start {
             continue;
           }
 
+          if(orderID < 1){
+            Logger.err("Index too low, starting at 1");
+            continue;
+          }
           l.update(o.get(orderID-1), posX, posY, posZ);
         } else if(cmd.startsWith(".query")){
           int posX;

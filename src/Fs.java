@@ -20,6 +20,10 @@ public class Fs {
         this.file = new File(path);
     }
 
+    /**
+     * checks if a file exists and is readable 
+     * @return boolean 
+     */
     public boolean isFile(){
         return this.file.exists() && this.file.canRead();
     }
