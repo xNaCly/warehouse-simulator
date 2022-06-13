@@ -12,18 +12,36 @@ public class Logger {
         return dateFormat.format(date);
     }
 
+    /**
+     * prints text to stdout with INFO as the prefix 
+     * @param text 
+     */
     static void inf(String text){
-        if(!silent) System.out.printf("[INF][%s]: %s\n", Logger.getDate(), text);
+        if(!silent) System.out.printf("[INFO][%s]: %s\n", Logger.getDate(), text);
     }
 
+    /**
+     * prints text to stdout with ERROR as the prefix 
+     * (Only logging method exempt from the '--silent' flag)
+     * @param text 
+     */
     static void err(String text){
-        System.out.printf("[ERR][%s]: %s\n", Logger.getDate(), text);
+        System.out.printf("[ERROR][%s]: %s\n", Logger.getDate(), text);
     }
 
+    /**
+     * prints text to stdout with SUCCESS as the prefix 
+     * @param text 
+     */
     static void suc(String text){
-        if(!silent) System.out.printf("[SUC][%s]: %s\n", Logger.getDate(), text);
+        if(!silent) System.out.printf("[SUCCESS][%s]: %s\n", Logger.getDate(), text);
     }
-    static void debug(String text, int l, String file){
-        if(!silent) if(Logger.debug) System.out.printf("[DEBUG][%s][f:%s][l:%d]: %s\n", Logger.getDate(), file, l, text);
+
+    /**
+     * prints text to stdout with DEBUG as the prefix (only prints if '--debug' flag is specified)
+     * @param text 
+     */
+    static void debug(String text){
+        if(Logger.debug) System.out.printf("[DEBUG][%s]: %s\n", Logger.getDate(), text);
     }
 }
