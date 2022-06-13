@@ -55,7 +55,7 @@ public class Holz extends Product {
 
     @Override
     public String getNameAndProperty(){
-        return this.name + ":" + this.holzType;
+        return this.name + ":" + this.holzForm;
     }
 
     public String getNameAndProperties(){

@@ -15,6 +15,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return this.id + ": " + this.product.toString() + " | " + this.price;
+        return this.id + " ("+ (this.insertOrder?"E" : "A") +") " + this.product.getNameAndProperties() + " " + this.price + "€";
     }
 }
