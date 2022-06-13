@@ -4,24 +4,32 @@ public class Lager{
     Product[][][] lager = new Product[2][3][4];
     Balance balance;
 
+    /**
+     * Lager enables storing of products at slots in a 3 dimensional product array.
+     */
     public Lager(Balance balance){
         this.balance = balance;
     }
 
+    /**
+     * @param o Order class which includes the product which gets inserted at the given coordiantes
+     * @param posX
+     * @param posY
+     * @param posZ
+     */
     public boolean update(Order o, int posX, int posY, int posZ){
-        if(o.insertOrder){
-            this.insert(o, posX, posY, posZ);
-        } else{
-            this.remove(o, posX, posY, posZ);
+        if(posX > 3 || posY > 2 || posZ > 1){
+            return false;
         }
-        return false;
+        if(o.insertOrder) this.insert(o, posX, posY, posZ);
+        else this.remove(o, posX, posY, posZ);
+        return true;
     }
 
     private boolean insert(Order o, int posX, int posY, int posZ){
         String feedback = String.format("[Order: %d] %s: %d (Einlagerung)", o.id, o.product.toString(), o.price);
 
         if(!this.insertInternal(o.product, posX, posY, posZ)) return false;
-
         this.balance.updateBalance(o.price, feedback, false);
         Logger.suc("Inserted '" + o.product.getNameAndProperties() + "' with order id " + o.id + " at Slot ["+ posZ + "][" + posY + "][" + posX + "]");
         return true;
@@ -37,11 +45,12 @@ public class Lager{
         return true;
     }
 
+    /**
+     * move target slot to dest slot
+     */
     public boolean rearrange(int targetX, int targetY, int targetZ, int destX, int destY, int destZ){
         Product p = this.lager[targetX][targetY][targetZ];
-        this.insertInternal(p, destX, destY, destZ);
-        this.removeInternal(p, targetX, targetY, targetZ);
-        return true;
+        return this.insertInternal(p, destX, destY, destZ) && this.removeInternal(p, targetX, targetY, targetZ);
     }
 
     private boolean insertInternal(Product p, int posX, int posY, int posZ){
@@ -55,7 +64,6 @@ public class Lager{
         }
 
         String pr = p.getNameAndProperty(); 
-        System.out.println(pr);
         if(pr.contains(":")) {
             String[] prod = pr.split(":");
             prodName = prod[0];
@@ -122,11 +130,23 @@ public class Lager{
         // Delete the other slot taken up by the BALKEN
         if(p.getNameAndProperty().equals("Holz:BALKEN")){
             int otherZ = posZ == 1 ? 0 : 1;
-            this.lager[otherZ][posY][posX] = new Product();
+            this.lager[otherZ][posY][posX] = null;
         }
 
-        this.lager[posZ][posY][posX] = new Product();
+        this.lager[posZ][posY][posX] = null;
         return true;
+    }
+
+    /**
+     * recycle / destroy the product at the coordinates
+     */
+    public boolean recycle(int posX, int posY, int posZ){
+        Product p = this.lager[posZ][posY][posX];
+        if(p == null || p.getNameAndProperties() == null) return false;
+        this.balance.updateBalance(300, "Recycled: " + p.getNameAndProperties(), true);
+        boolean f = this.removeInternal(p, posX, posY, posZ);
+        if(f) Logger.suc("Recycled Item at ["+ posZ + "][" + posY + "][" + posX + "]: " + p.getNameAndProperties());
+        return f;
     }
 
     public Product getSlot(int posX, int posY, int posZ){
