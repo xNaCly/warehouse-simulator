@@ -23,13 +23,12 @@ public class Start {
     static void parseArgs(String[] args){
       try{
         Start.path = args[0];
-          switch (args[1]) {
-              case "-d", "--debug" -> Start.debug = true;
-              case "-s", "--silent" -> Start.silent = true;
-              case "--headless", "-h" -> Start.headless = true;
-          }
-        if(args[2].equals("--headless") || args[2].equals("-h")){
-          Start.headless = true;
+        for(String s : args){
+            switch (s) {
+                case "-d", "--debug" -> Start.debug = true;
+                case "-s", "--silent" -> Start.silent = true;
+                case "--headless", "-h" -> Start.headless = true;
+            }
         }
       } catch (ArrayIndexOutOfBoundsException ignored) {}
     }
