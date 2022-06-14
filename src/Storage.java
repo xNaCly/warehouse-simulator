@@ -1,13 +1,13 @@
 import product.*;
 
-public class Lager{
+public class Storage {
     Product[][][] lager = new Product[2][3][4];
     Balance balance;
 
     /**
      * Lager enables storing of products at slots in a 3 dimensional product array.
      */
-    public Lager(Balance balance){
+    public Storage(Balance balance){
         this.balance = balance;
     }
 
@@ -69,8 +69,8 @@ public class Lager{
             prodName = prod[0];
             prodAtt = prod[1];
         } else {
-            prodName = p.toString();
-            prodAtt = null;
+            Logger.err("Product is probably unknown");
+            return false;
         }
 
         if(this.lager[posZ][posY][posX] != null){

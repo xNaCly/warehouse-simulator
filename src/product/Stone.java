@@ -2,48 +2,48 @@ package product;
 
 import java.util.Objects;
 
-enum SteinType {
+enum StoneType {
     MARMOR,
     GRANIT,
     SANDSTEIN
 }
 
-enum SteinWeight {
+enum StoneWeight {
     LIGHT,
     MIDDLE,
     HEAVY,
 }
 
-public class Stein extends Product {
-    final SteinType steinType;
-    final SteinWeight steinWeight;
+public class Stone extends Product {
+    final StoneType stoneType;
+    final StoneWeight stoneWeight;
 
-    public Stein(String type, String weight){
+    public Stone(String type, String weight){
         this.name = "Stein";
         if(Objects.equals(type.toLowerCase(), "marmor")){
-            this.steinType = SteinType.MARMOR;
+            this.stoneType = StoneType.MARMOR;
         } else if(Objects.equals(type.toLowerCase(), "granit")){
-            this.steinType = SteinType.GRANIT;
+            this.stoneType = StoneType.GRANIT;
         } else {
-            this.steinType = SteinType.SANDSTEIN;
+            this.stoneType = StoneType.SANDSTEIN;
         }
 
         if(Objects.equals(weight.toLowerCase(), "mittel")){
-            this.steinWeight = SteinWeight.MIDDLE;
+            this.stoneWeight = StoneWeight.MIDDLE;
         } else if(Objects.equals(weight.toLowerCase(), "schwer")){
-            this.steinWeight = SteinWeight.HEAVY;
+            this.stoneWeight = StoneWeight.HEAVY;
         } else {
-            this.steinWeight = SteinWeight.LIGHT;
+            this.stoneWeight = StoneWeight.LIGHT;
         }
     }
 
     @Override
     public String getNameAndProperty(){
-        return this.name + ":" + this.steinWeight;
+        return this.name + ":" + this.stoneWeight;
     }
 
     public String getNameAndProperties(){
-        return this.name + ":" + this.steinType + ":" + this.steinWeight;
+        return this.name + ":" + this.stoneType + ":" + this.stoneWeight;
     }
 
     @Override

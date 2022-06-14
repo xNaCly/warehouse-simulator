@@ -44,7 +44,7 @@ public class Start {
       Scanner sc = new Scanner(System.in);
       Fs fs = new Fs(Start.path);
       Balance b = new Balance();
-      Lager l = new Lager(b);
+      Storage l = new Storage(b);
       ArrayList<Order> o = fs.parseOrders();
       System.out.println("Warehouse simulator - https://github.com/xnacly");
 

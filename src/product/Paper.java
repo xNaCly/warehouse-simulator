@@ -2,44 +2,44 @@ package product;
 
 import java.util.Objects;
 
-enum PapierColor {
+enum PaperColor {
     WHITE,
     GREEN,
     BLUE,
 }
-enum PapierSize {
+enum PaperSize {
     A3,
     A4,
     A5
 }
 
-public class Papier extends Product {
-    final PapierSize papierSize;
-    final PapierColor papierColor;
+public class Paper extends Product {
+    final PaperSize paperSize;
+    final PaperColor paperColor;
 
-    public Papier(String color, String size) {
+    public Paper(String color, String size) {
         this.name = "Papier";
 
         if(Objects.equals(color.toLowerCase(), "blau")){
-            this.papierColor = PapierColor.BLUE;
+            this.paperColor = PaperColor.BLUE;
         } else if(Objects.equals(color.toLowerCase(), "gruen")){
-            this.papierColor = PapierColor.GREEN;
+            this.paperColor = PaperColor.GREEN;
         } else {
-            this.papierColor = PapierColor.WHITE;
+            this.paperColor = PaperColor.WHITE;
         }
 
 
         if(Objects.equals(size.toLowerCase(), "A4")){
-            this.papierSize = PapierSize.A4;
+            this.paperSize = PaperSize.A4;
         } else if(Objects.equals(color.toLowerCase(), "A5")){
-            this.papierSize = PapierSize.A5;
+            this.paperSize = PaperSize.A5;
         } else {
-            this.papierSize = PapierSize.A3;
+            this.paperSize = PaperSize.A3;
         }
     }
 
     public String getNameAndProperties(){
-        return this.name + ":" + this.papierSize + ":" + this.papierColor;
+        return this.name + ":" + this.paperSize + ":" + this.paperColor;
     }
 
     @Override

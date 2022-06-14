@@ -2,48 +2,48 @@ package product;
 
 import java.util.Objects;
 
-enum HolzType {
+enum WoodType {
     KIEFER,
     BUCHE,
     EICHE
 }
 
-enum HolzForm {
+enum WoodForm {
     BRETTER,
     BALKEN,
     SCHEIT
 }
 
-public class Holz extends Product {
-    final HolzType holzType;
-    final HolzForm holzForm;
-    public Holz(String type, String form){
+public class Wood extends Product {
+    final WoodType woodType;
+    final WoodForm woodForm;
+    public Wood(String type, String form){
         this.name = "Holz";
 
         if(Objects.equals(type.toLowerCase(), "kiefer")){
-            this.holzType = HolzType.KIEFER;
+            this.woodType = WoodType.KIEFER;
         } else if(Objects.equals(type.toLowerCase(), "buche")){
-            this.holzType = HolzType.BUCHE;
+            this.woodType = WoodType.BUCHE;
         } else {
-            this.holzType = HolzType.EICHE;
+            this.woodType = WoodType.EICHE;
         }
 
         if(Objects.equals(form.toLowerCase(), "bretter")){
-            this.holzForm = HolzForm.BRETTER;
+            this.woodForm = WoodForm.BRETTER;
         } else if(Objects.equals(form.toLowerCase(), "balken")){
-            this.holzForm = HolzForm.BALKEN;
+            this.woodForm = WoodForm.BALKEN;
         } else {
-            this.holzForm = HolzForm.SCHEIT;
+            this.woodForm = WoodForm.SCHEIT;
         }
     }
 
     @Override
     public String getNameAndProperty(){
-        return this.name + ":" + this.holzForm;
+        return this.name + ":" + this.woodForm;
     }
 
     public String getNameAndProperties(){
-        return this.name + ":" + this.holzType + ":" + this.holzForm;
+        return this.name + ":" + this.woodType + ":" + this.woodForm;
     }
 
     @Override

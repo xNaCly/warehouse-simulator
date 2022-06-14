@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Test {
-    static Lager l;
+    static Storage l;
     static Balance b;
     static Fs fs;
     static ArrayList<Order> o;
@@ -34,7 +34,7 @@ public class Test {
     }
 
     private static void initLager(){
-        Test.l = new Lager(b);
+        Test.l = new Storage(b);
         Test.successfullTests++;
     }
 

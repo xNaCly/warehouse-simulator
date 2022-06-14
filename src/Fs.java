@@ -68,9 +68,9 @@ public class Fs {
         Product p;
 
         switch (sl[2].toLowerCase()) {
-            case "papier" -> p = new Papier(sl[3], sl[4]);
-            case "stein" -> p = new Stein(sl[3], sl[4]);
-            case "holz" -> p = new Holz(sl[3], sl[4]);
+            case "papier" -> p = new Paper(sl[3], sl[4]);
+            case "stein" -> p = new Stone(sl[3], sl[4]);
+            case "holz" -> p = new Wood(sl[3], sl[4]);
             default -> {
                 p = new Product();
                 p.setName("Unknown");
