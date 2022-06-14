@@ -128,7 +128,6 @@ public class Start {
           System.out.println("Usage: \n\t.exit \n\t\t(exit the shell)\n\t.help \n\t\t(print this screen)\n\t.fulfill [orderID] [posX] [posY] [posZ] \n\t\t(fulfill an order)\n\t.orders \n\t\t(view available orders)\n\t.query [posX] [posY] [posZ] \n\t\t(get product at coords)\n\t.balance \n\t\t(view current balance)\n\t.transactions \n\t\t(view transaction log)");
         } else {
           Logger.err("Unknown command: " + cmd);
-          continue;
         }
       }
       sc.close();
