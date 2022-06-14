@@ -37,22 +37,6 @@ public class Holz extends Product {
         }
     }
 
-    public HolzType getHolzType() {
-        return holzType;
-    }
-
-    public void setHolzType(HolzType holzType) {
-        this.holzType = holzType;
-    }
-
-    public HolzForm getHolzForm() {
-        return holzForm;
-    }
-
-    public void setHolzForm(HolzForm holzForm) {
-        this.holzForm = holzForm;
-    }
-
     @Override
     public String getNameAndProperty(){
         return this.name + ":" + this.holzForm;

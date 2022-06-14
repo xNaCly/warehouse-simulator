@@ -38,22 +38,6 @@ public class Papier extends Product {
         }
     }
 
-    public PapierSize getPapierSize() {
-        return papierSize;
-    }
-
-    public void setPapierSize(PapierSize papierSize) {
-        this.papierSize = papierSize;
-    }
-
-    public PapierColor getPapierColor() {
-        return papierColor;
-    }
-
-    public void setPapierColor(PapierColor papierColor) {
-        this.papierColor = papierColor;
-    }
-
     public String getNameAndProperties(){
         return this.name + ":" + this.papierSize + ":" + this.papierColor;
     }

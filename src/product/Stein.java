@@ -37,22 +37,6 @@ public class Stein extends Product {
         }
     }
 
-    public SteinType getSteinType() {
-        return steinType;
-    }
-
-    public void setSteinType(SteinType steinType) {
-        this.steinType = steinType;
-    }
-
-    public SteinWeight getSteinWeight() {
-        return steinWeight;
-    }
-
-    public void setSteinWeight(SteinWeight steinWeight) {
-        this.steinWeight = steinWeight;
-    }
-
     @Override
     public String getNameAndProperty(){
         return this.name + ":" + this.steinWeight;
