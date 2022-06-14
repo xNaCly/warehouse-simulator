@@ -1,10 +1,10 @@
 import product.Product;
 
 public class Order {
-    boolean insertOrder;
-    Product product;
-    int price;
-    int id;
+    final boolean insertOrder;
+    final Product product;
+    final int price;
+    final int id;
 
     public Order(int id, boolean insertOrder, Product product, int price){
        this.id = id;

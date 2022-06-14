@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 
 public class Fs {
-    File file;
+    final File file;
 
     /**
      * exposes csv parsing functionality
@@ -67,21 +67,19 @@ public class Fs {
         boolean orderType = Objects.equals(sl[1], "Einlagerung");
         Product p;
 
-        if(Objects.equals(sl[2].toLowerCase(), "papier")){
-            p = new Papier(sl[3], sl[4]);
-        } else if(Objects.equals(sl[2].toLowerCase(), "stein")){
-            p = new Stein(sl[3], sl[4]);
-        } else if(Objects.equals(sl[2].toLowerCase(), "holz")){
-            p = new Holz(sl[3], sl[4]);
-        } else {
-            p = new Product();
-            p.setName("Unknown");
-            Logger.err("Product at index: " + (index+1) + " is unknown");
+        switch (sl[2].toLowerCase()) {
+            case "papier" -> p = new Papier(sl[3], sl[4]);
+            case "stein" -> p = new Stein(sl[3], sl[4]);
+            case "holz" -> p = new Holz(sl[3], sl[4]);
+            default -> {
+                p = new Product();
+                p.setName("Unknown");
+                Logger.err("Product at index: " + (index + 1) + " is unknown");
+            }
         }
 
         int price = Integer.parseInt(sl[5]);
 
-        Order o = new Order(index, orderType, p, price);
-        return o;
+        return new Order(index, orderType, p, price);
     }
 }

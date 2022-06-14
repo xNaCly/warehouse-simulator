@@ -15,8 +15,8 @@ enum SteinWeight {
 }
 
 public class Stein extends Product {
-    SteinType steinType;
-    SteinWeight steinWeight;
+    final SteinType steinType;
+    final SteinWeight steinWeight;
 
     public Stein(String type, String weight){
         this.name = "Stein";

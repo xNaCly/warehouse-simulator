@@ -15,8 +15,8 @@ enum HolzForm {
 }
 
 public class Holz extends Product {
-    HolzType holzType;
-    HolzForm holzForm;
+    final HolzType holzType;
+    final HolzForm holzForm;
     public Holz(String type, String form){
         this.name = "Holz";
 

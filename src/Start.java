@@ -31,7 +31,7 @@ public class Start {
         if(args[2].equals("--headless") || args[2].equals("-h")){
           Start.headless = true;
         }
-      } catch (ArrayIndexOutOfBoundsException e) {}
+      } catch (ArrayIndexOutOfBoundsException ignored) {}
     }
 
 

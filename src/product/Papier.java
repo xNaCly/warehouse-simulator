@@ -14,8 +14,8 @@ enum PapierSize {
 }
 
 public class Papier extends Product {
-    PapierSize papierSize;
-    PapierColor papierColor;
+    final PapierSize papierSize;
+    final PapierColor papierColor;
 
     public Papier(String color, String size) {
         this.name = "Papier";

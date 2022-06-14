@@ -8,7 +8,7 @@ public class Test {
     static int failedTests;
     static int successfullTests;
 
-    public static void main(String args[]){
+    public static void main(String[] args){
         Logger.silent = true;
         Logger.debug = true;
         Test.initBalance();
@@ -30,31 +30,16 @@ public class Test {
 
     private static void initBalance(){
         Test.b = new Balance();
-        if(Test.b == null){
-            Logger.err("Test init Balance failed");
-            Test.failedTests++;
-            return;
-        }
         Test.successfullTests++;
     }
 
     private static void initLager(){
         Test.l = new Lager(b);
-        if(Test.l == null){
-            Logger.err("Test init Lager failed");
-            Test.failedTests++;
-            return;
-        }
         Test.successfullTests++;
     }
 
     private static void initFs(String filename){
         Test.fs = new Fs(filename);
-        if(Test.fs == null){
-            Logger.err("Test init fs failed");
-            Test.failedTests++;
-            return;
-        }
         Test.successfullTests++;
     }
     
