@@ -26,6 +26,7 @@ public class Test {
         int percentF = Test.failedTests * 100 / total;
         int percentS = Test.successfullTests * 100 / total;
         System.out.printf("test results: %d (%d%%) passed; %d (%d%%) failed; %d measured\n", Test.successfullTests, percentS, Test.failedTests, percentF, total);
+        if(Test.failedTests != 0) System.exit(1);
     }
 
     private static void initBalance(){
