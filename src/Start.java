@@ -12,8 +12,8 @@ public class Start {
         Logger.debug = Start.debug;
         Logger.silent = Start.silent;
 
-        if(!Start.headless) new Gui();
-        else Start.cli();
+        if(Start.headless) Start.cli();
+        else new Gui();
     }
 
     /**
@@ -23,13 +23,11 @@ public class Start {
     static void parseArgs(String[] args){
       try{
         Start.path = args[0];
-        if(args[1].equals("-d") || args[1].equals("--debug")){
-          Start.debug = true;
-        } else if(args[1].equals("-s") || args[1].equals("--silent")){
-          Start.silent = true;
-        } else if(args[1].equals("--headless") || args[1].equals("-h")){
-          Start.headless = true;
-        } 
+          switch (args[1]) {
+              case "-d", "--debug" -> Start.debug = true;
+              case "-s", "--silent" -> Start.silent = true;
+              case "--headless", "-h" -> Start.headless = true;
+          }
         if(args[2].equals("--headless") || args[2].equals("-h")){
           Start.headless = true;
         }

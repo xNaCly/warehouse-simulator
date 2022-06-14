@@ -13,7 +13,7 @@ public class Gui {
 
         Fs fs = new Fs(Start.path);
         ArrayList<Order> o = fs.parseOrders();
-        // this.start();
+        this.start();
     }
 
     private void start(){
