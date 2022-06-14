@@ -51,6 +51,8 @@ public class Storage {
      */
     public boolean rearrange(int targetX, int targetY, int targetZ, int destX, int destY, int destZ){
         Product p = this.lager[targetX][targetY][targetZ];
+        String feedback = String.format("[Order: M] %s: -100€ (Move)", p.getNameAndProperties().replace(":", " "), 300);
+        this.balance.updateBalance(300, feedback,  true);
         return this.insertInternal(p, destX, destY, destZ) && this.removeInternal(p, targetX, targetY, targetZ);
     }
 
