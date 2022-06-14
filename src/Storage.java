@@ -18,12 +18,13 @@ public class Storage {
      * @param posZ
      */
     public boolean update(Order o, int posX, int posY, int posZ){
+        boolean feedback;
         if(posX > 3 || posY > 2 || posZ > 1){
             return false;
         }
-        if(o.insertOrder) this.insert(o, posX, posY, posZ);
-        else this.remove(o, posX, posY, posZ);
-        return true;
+        if(o.insertOrder) feedback =  this.insert(o, posX, posY, posZ);
+        else feedback = this.remove(o, posX, posY, posZ);
+        return feedback;
     }
 
     private boolean insert(Order o, int posX, int posY, int posZ){
