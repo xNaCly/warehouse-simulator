@@ -38,6 +38,11 @@ public class Paper extends Product {
         }
     }
 
+    @Override
+    public String getNameAndProperty(){
+        return this.name + ":" + this.paperColor;
+    }
+    @Override
     public String getNameAndProperties(){
         return this.name + ":" + this.paperSize + ":" + this.paperColor;
     }

@@ -42,6 +42,7 @@ public class Stone extends Product {
         return this.name + ":" + this.stoneWeight;
     }
 
+    @Override
     public String getNameAndProperties(){
         return this.name + ":" + this.stoneType + ":" + this.stoneWeight;
     }

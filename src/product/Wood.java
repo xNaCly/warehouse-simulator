@@ -42,6 +42,7 @@ public class Wood extends Product {
         return this.name + ":" + this.woodForm;
     }
 
+    @Override
     public String getNameAndProperties(){
         return this.name + ":" + this.woodType + ":" + this.woodForm;
     }
