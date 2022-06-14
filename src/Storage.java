@@ -27,7 +27,7 @@ public class Storage {
     }
 
     private boolean insert(Order o, int posX, int posY, int posZ){
-        String feedback = String.format("[Order: %d] %s: %d (Einlagerung)", o.id, o.product.toString(), o.price);
+        String feedback = String.format("[Order: %d] %s: %d€ (Einlagerung)", o.id, o.product.getNameAndProperties().replace(":", " "), o.price);
 
         if(!this.insertInternal(o.product, posX, posY, posZ)) return false;
         this.balance.updateBalance(o.price, feedback, false);
@@ -36,7 +36,7 @@ public class Storage {
     }
 
     private boolean remove(Order o, int posX, int posY, int posZ){
-        String feedback = String.format("[Order: %d] %s: %d (Auslagerung)", o.id, o.product.toString(), o.price);
+        String feedback = String.format("[Order: %d] %s: %d€ (Auslagerung)", o.id, o.product.getNameAndProperties().replace(":", " "), o.price);
 
         if(!this.removeInternal(o.product, posX, posY, posZ)) return false;
 
@@ -143,7 +143,8 @@ public class Storage {
     public boolean recycle(int posX, int posY, int posZ){
         Product p = this.lager[posZ][posY][posX];
         if(p == null || p.getNameAndProperties() == null) return false;
-        this.balance.updateBalance(300, "Recycled: " + p.getNameAndProperties(), true);
+        String feedback = String.format("[Order: R] %s: -300€ (Recycling)", p.getNameAndProperties().replace(":", " "), 300);
+        this.balance.updateBalance(300, feedback,  true);
         boolean f = this.removeInternal(p, posX, posY, posZ);
         if(f) Logger.suc("Recycled Item at ["+ posZ + "][" + posY + "][" + posX + "]: " + p.getNameAndProperties());
         return f;
