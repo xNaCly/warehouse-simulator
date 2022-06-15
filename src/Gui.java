@@ -55,6 +55,13 @@ public class Gui {
         this.r.setVisible(true);
     }
 
+    private void destoryTransactionsWindow(){
+        transactionsWindow.removeAll();
+        transactionsWindow.setVisible(false);
+        popOutActive = false;
+        transactionsWindow.dispose();
+    }
+
     private void popOutTransactions(){
         if(this.popOutActive) return;
         this.transactionsWindow = new JFrame("Warehouse simulator - Transactions");
@@ -79,10 +86,7 @@ public class Gui {
         // remove all Lables in transaction window after closing it
         this.transactionsWindow.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
-                transactionsWindow.removeAll();
-                transactionsWindow.setVisible(false);
-                popOutActive = false;
-                transactionsWindow.dispose();
+                destoryTransactionsWindow();
             }
         });
         this.popOutActive = true;
@@ -153,6 +157,8 @@ public class Gui {
         }
         this.b.updateBalance(curOrder.price, "Auftrag abgelehnt: -" + curOrder.price + "€", true);
         this.rerenderHud();
+        this.destoryTransactionsWindow();
+        this.popOutTransactions();
     }
 
     private void nextOrder(){
@@ -164,6 +170,8 @@ public class Gui {
             this.currentOrderIndex = 0;
         }
         this.rerenderHud();
+        this.destoryTransactionsWindow();
+        this.popOutTransactions();
     }
 
     private class ButtonClickListener implements ActionListener{
