@@ -1,12 +1,15 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import javax.swing.*;
 import java.util.Date;
 
 public class Logger {
     static boolean debug;
     static boolean silent;
+    static boolean headless;
+    static JFrame root;
 
-    static private String getDate(){
+    static public String getDate(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         return dateFormat.format(date);
@@ -27,6 +30,7 @@ public class Logger {
      */
     static void err(String text){
         System.out.printf("[ERROR][%s]: %s\n", Logger.getDate(), text);
+        if(!Logger.headless) JOptionPane.showMessageDialog(root, text);
     }
 
     /**

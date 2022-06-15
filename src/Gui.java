@@ -36,6 +36,7 @@ public class Gui {
         this.o = fs.parseOrders();
         this.start();
         setUIFont(new FontUIResource(new Font("Serif",Font.PLAIN,18)));
+        Logger.root = this.r;
     }
 
     private void start(){
@@ -55,7 +56,7 @@ public class Gui {
     }
 
     private void popOutTransactions(){
-        this.popOutActive = true;
+        if(this.popOutActive) return;
         this.transactionsWindow = new JFrame("Warehouse simulator - Transactions");
         this.transactionsWindow.setSize(1024, 500);
         this.transactionsWindow.setVisible(true);
@@ -84,6 +85,7 @@ public class Gui {
                 transactionsWindow.dispose();
             }
         });
+        this.popOutActive = true;
     }
 
     private void hud(){

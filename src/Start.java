@@ -10,6 +10,7 @@ public class Start {
     public static void main(String[] args){
         Start.parseArgs(args);
         Logger.debug = Start.debug;
+        Logger.headless = Start.headless;
         Logger.silent = Start.silent;
 
         if(Start.headless) Start.cli();
