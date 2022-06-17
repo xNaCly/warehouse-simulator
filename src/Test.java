@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import product.*;
 
 public class Test {
     static Storage l;
@@ -11,11 +12,13 @@ public class Test {
     public static void main(String[] args){
         Logger.silent = true;
         Logger.debug = true;
+        Logger.headless = true;
         Test.initBalance();
         Test.initLager();
         Test.initFs(args[0]);
         Test.parseOrders();
         Test.insertOrder();
+        Test.getOrder();
         Test.removeOrder();
         // Test.trashProduct();
         Test.end();
@@ -59,6 +62,16 @@ public class Test {
         boolean f = Test.l.update(_o, 0, 0, 0);
         if(!f){
             Logger.err("Test insert order failed");
+            Test.failedTests++;
+            return;
+        }
+        Test.successfullTests++;
+    }
+
+    private static void getOrder(){
+        Product p = Test.l.getSlot(0, 0, 0);
+        if(p != null){
+            Logger.err("Test get order failed");
             Test.failedTests++;
             return;
         }
