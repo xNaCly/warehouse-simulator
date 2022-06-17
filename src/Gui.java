@@ -1,6 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 
@@ -11,10 +11,11 @@ public class Gui {
     private JLabel balanceLabel;
     private JLabel currentOrder;
     private JFrame transactionsWindow;
-    private int currentOpenOrders;
+    private int[] currentOpenOrders = {-1, -1, -1};
     private ArrayList<Order> o;
     private int currentOrderIndex;
     private boolean popOutActive;
+    private int[] coords;
 
     public static void setUIFont (javax.swing.plaf.FontUIResource f){
         java.util.Enumeration keys = UIManager.getDefaults().keys();
@@ -46,6 +47,7 @@ public class Gui {
 
         this.renderButtons();
         this.hud();
+        this.renderMenu();
 
         this.r.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
@@ -55,11 +57,13 @@ public class Gui {
         this.r.setVisible(true);
     }
 
-    private void destoryTransactionsWindow(){
-        transactionsWindow.removeAll();
-        transactionsWindow.setVisible(false);
-        popOutActive = false;
-        transactionsWindow.dispose();
+    private void destroyTransactionsWindow(){
+        if(this.transactionsWindow != null){
+            transactionsWindow.removeAll();
+            transactionsWindow.setVisible(false);
+            popOutActive = false;
+            transactionsWindow.dispose();
+        }
     }
 
     private void popOutTransactions(){
@@ -86,7 +90,7 @@ public class Gui {
         // remove all Lables in transaction window after closing it
         this.transactionsWindow.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
-                destoryTransactionsWindow();
+                destroyTransactionsWindow();
             }
         });
         this.popOutActive = true;
@@ -104,7 +108,11 @@ public class Gui {
     }
 
     private void rerenderHud(){
-        this.currentOrder.setText(this.o.get(this.currentOrderIndex).toString().replace(":", " "));
+        String orders = null;
+        for(int i : this.currentOpenOrders){
+            if(i != -1) orders += "\n" + this.o.get(i).toString().replace(":", "");
+        }
+        this.currentOrder.setText(orders);
         this.balanceLabel.setText("Balance: " + this.b.getBalance() + "€");
     }
 
@@ -149,29 +157,34 @@ public class Gui {
         return this.o.get(this.currentOrderIndex);
     }
 
+    private void fulFillOrder(){
+        Order _o = this.getCurOrder();
+    }
+
     private void skipOrder(){
-        Order curOrder = getCurOrder();
+        Order curOrder = this.getCurOrder();
         this.currentOrderIndex++;
         if(this.currentOrderIndex >= this.o.size()){
             this.currentOrderIndex = 0;
         }
         this.b.updateBalance(curOrder.price, "Auftrag abgelehnt: -" + curOrder.price + "€", true);
         this.rerenderHud();
-        this.destoryTransactionsWindow();
-        this.popOutTransactions();
+        if(this.popOutActive){
+            this.destroyTransactionsWindow();
+            this.popOutTransactions();
+        }
     }
 
     private void nextOrder(){
-//        if(this.currentOpenOrders <= 3){
-//            this.currentOrderIndex++;
-//            this.currentOpenOrders++;
-//        }
         if(this.currentOrderIndex >= this.o.size()){
             this.currentOrderIndex = 0;
         }
+        this.currentOrderIndex++;
         this.rerenderHud();
-        this.destoryTransactionsWindow();
-        this.popOutTransactions();
+        if(this.popOutActive){
+            this.destroyTransactionsWindow();
+            this.popOutTransactions();
+        }
     }
 
     private class ButtonClickListener implements ActionListener{
@@ -181,6 +194,7 @@ public class Gui {
                 case "list" -> popOutTransactions();
                 case "next" -> nextOrder();
                 case "skip" -> skipOrder();
+                case "fulfill" -> fulFillOrder();
             }
         }
     }
