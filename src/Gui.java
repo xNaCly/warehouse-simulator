@@ -5,20 +5,19 @@ import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 
 public class Gui {
-    private JFrame r; 
-    private Balance b;
-    private Storage l;
+    private final JFrame r;
+    private final Balance b;
+    private final Storage l;
     private JLabel balanceLabel;
     private JLabel currentOrder;
     private JFrame transactionsWindow;
-    private int[] currentOpenOrders = {-1, -1, -1};
-    private ArrayList<Order> o;
+    private final ArrayList<Order> o;
     private int currentOrderIndex;
     private boolean popOutActive;
-    private int[] coords;
+    private JButton[] slots = new JButton[24];
 
     public static void setUIFont (javax.swing.plaf.FontUIResource f){
-        java.util.Enumeration keys = UIManager.getDefaults().keys();
+        Enumeration<Object> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
             Object key = keys.nextElement();
             Object value = UIManager.get (key);
@@ -47,7 +46,7 @@ public class Gui {
 
         this.renderButtons();
         this.hud();
-        this.renderMenu();
+        this.renderSlots();
 
         this.r.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
@@ -82,7 +81,6 @@ public class Gui {
             data[i][1] = s;
         }
 
-
         JTable jt = new JTable(data, headerRow);
         JScrollPane jp = new JScrollPane(jt);
         this.transactionsWindow.add(jp);
@@ -108,22 +106,39 @@ public class Gui {
     }
 
     private void rerenderHud(){
-        String orders = null;
-        for(int i : this.currentOpenOrders){
-            if(i != -1) orders += "\n" + this.o.get(i).toString().replace(":", "");
-        }
-        this.currentOrder.setText(orders);
+        try{
+            this.currentOrder.setText(this.o.get(this.currentOrderIndex).toString().replace(":", " "));
+        } catch (IndexOutOfBoundsException ignored){}
         this.balanceLabel.setText("Balance: " + this.b.getBalance() + "€");
     }
 
-    private void renderMenu(){
-        JPanel container = new JPanel();
-        JButton fulFillOrder = new JButton("Auftrag erfüllen");
-        fulFillOrder.setActionCommand("fulfill");
-        fulFillOrder.setSize(250, 50);
+    private void renderSlots(){
+        JPanel jp = new JPanel();
+        JPanel jp1 = new JPanel();
+        jp1.setLayout(new GridLayout(3, 4));
+        JPanel jp2 = new JPanel();
+        jp2.setLayout(new GridLayout(3, 4));
+        for(int i = 0, z = 0; z < 2; z++){
+            for(int y = 0; y < 3; y++){
+                for(int x = 0; x < 4; x++){
+                    String s = String.format("slot:%d_%d_%d_%d", z,y,x,i);
+                    JButton jb = new JButton(s.substring(0, 10));
+                    jb.setActionCommand(s);
+                    jb.addActionListener(new ButtonClickListener());
+                    Logger.debug("new "+s);
+                    jb.setSize(100, 100);
 
-        container.add(fulFillOrder);
-        this.r.add(container);
+                    if(z == 0) jp1.add(jb);
+                    else jp2.add(jb);
+
+                    this.slots[i] = jb;
+                    i++;
+                }
+            }
+        }
+        jp.add(jp1);
+        jp.add(jp2);
+        this.r.add(jp);
     }
 
     private void renderButtons(){
@@ -132,6 +147,7 @@ public class Gui {
         JButton transactionButton = new JButton("Transaktionsliste");
         JButton nextOrder = new JButton("Nächster Auftrag");
         JButton skipOrder = new JButton("Auftrag überspringen");
+
 
         transactionButton.setActionCommand("list");
         transactionButton.setSize(250, 50);
@@ -150,6 +166,7 @@ public class Gui {
         container.add(transactionButton);
         container.add(nextOrder);
         container.add(skipOrder);
+
         this.r.add(container, BorderLayout.SOUTH);
     }
 
@@ -157,8 +174,17 @@ public class Gui {
         return this.o.get(this.currentOrderIndex);
     }
 
-    private void fulFillOrder(){
+    private void fulFillOrder(int x, int y, int z, int index){
         Order _o = this.getCurOrder();
+        boolean f = this.l.update(_o, x, y, z);
+        if(f){
+            if(_o.insertOrder) this.slots[index].setText(this.l.getSlot(x,y,z).getNameAndProperty());
+            else this.slots[index].setText(String.format("slot:%d_%d_%d", z, y, x));
+            if(this.currentOrderIndex == this.o.size()-1) this.currentOrderIndex = 0;
+            else this.currentOrderIndex++;
+        }
+        this.rerenderHud();
+        Logger.debug(""+this.currentOrderIndex);
     }
 
     private void skipOrder(){
@@ -190,11 +216,23 @@ public class Gui {
     private class ButtonClickListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
+            Logger.debug("Event: "+command);
             switch(command){
                 case "list" -> popOutTransactions();
                 case "next" -> nextOrder();
                 case "skip" -> skipOrder();
-                case "fulfill" -> fulFillOrder();
+                default -> {
+                    if(command.startsWith("slot:")){
+                        try {
+                            String[] coords = command.split(":")[1].split("_");
+                            int z = Integer.parseInt(coords[0]);
+                            int y = Integer.parseInt(coords[1]);
+                            int x = Integer.parseInt(coords[2]);
+                            int index = Integer.parseInt(coords[3]);
+                            fulFillOrder(x,y,z, index);
+                        } catch (ArrayIndexOutOfBoundsException ignored){}
+                    }
+                }
             }
         }
     }
