@@ -20,9 +20,11 @@ public class Test {
         Test.insertOrder();
         Test.getOrder();
         Test.removeOrder();
+        Test.blocking();
         // Test.trashProduct();
         Test.end();
     }
+
 
     private static void end(){
         int total = Test.failedTests + Test.successfullTests;
@@ -87,6 +89,9 @@ public class Test {
             return;
         }
         Test.successfullTests++;
+    }
+
+    private static void blocking() {
     }
 
     private static void rearrangeProduct(){
