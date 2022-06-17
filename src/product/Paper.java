@@ -24,12 +24,11 @@ public class Paper extends Product {
             case "weiss" -> this.paperColor = PaperColor.WHITE;
         }
 
-        switch (color.toLowerCase()) {
+        switch (size.toLowerCase()) {
             case "a3" -> this.paperSize = PaperSize.A3;
             case "a4" -> this.paperSize = PaperSize.A4;
             case "a5" -> this.paperSize = PaperSize.A5;
         }
-
     }
 
     @Override
