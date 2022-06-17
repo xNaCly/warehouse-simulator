@@ -1,7 +1,5 @@
 package product;
 
-import java.util.Objects;
-
 enum PaperColor {
     WHITE,
     GREEN,
@@ -14,28 +12,24 @@ enum PaperSize {
 }
 
 public class Paper extends Product {
-    final PaperSize paperSize;
-    final PaperColor paperColor;
+    PaperSize paperSize = null;
+    PaperColor paperColor = null;
 
     public Paper(String color, String size) {
         this.name = "Papier";
 
-        if(Objects.equals(color.toLowerCase(), "blau")){
-            this.paperColor = PaperColor.BLUE;
-        } else if(Objects.equals(color.toLowerCase(), "gruen")){
-            this.paperColor = PaperColor.GREEN;
-        } else {
-            this.paperColor = PaperColor.WHITE;
+        switch (color.toLowerCase()) {
+            case "blau" -> this.paperColor = PaperColor.BLUE;
+            case "gruen" -> this.paperColor = PaperColor.GREEN;
+            case "weiss" -> this.paperColor = PaperColor.WHITE;
         }
 
-
-        if(Objects.equals(size.toLowerCase(), "A4")){
-            this.paperSize = PaperSize.A4;
-        } else if(Objects.equals(color.toLowerCase(), "A5")){
-            this.paperSize = PaperSize.A5;
-        } else {
-            this.paperSize = PaperSize.A3;
+        switch (color.toLowerCase()) {
+            case "a3" -> this.paperSize = PaperSize.A3;
+            case "a4" -> this.paperSize = PaperSize.A4;
+            case "a5" -> this.paperSize = PaperSize.A5;
         }
+
     }
 
     @Override

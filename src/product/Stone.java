@@ -1,7 +1,5 @@
 package product;
 
-import java.util.Objects;
-
 enum StoneType {
     MARMOR,
     GRANIT,
@@ -15,25 +13,22 @@ enum StoneWeight {
 }
 
 public class Stone extends Product {
-    final StoneType stoneType;
-    final StoneWeight stoneWeight;
+    StoneType stoneType = null;
+    StoneWeight stoneWeight = null;
 
     public Stone(String type, String weight){
         this.name = "Stein";
-        if(Objects.equals(type.toLowerCase(), "marmor")){
-            this.stoneType = StoneType.MARMOR;
-        } else if(Objects.equals(type.toLowerCase(), "granit")){
-            this.stoneType = StoneType.GRANIT;
-        } else {
-            this.stoneType = StoneType.SANDSTEIN;
+
+        switch (type.toLowerCase()) {
+            case "marmor" -> this.stoneType = StoneType.MARMOR;
+            case "granit" -> this.stoneType = StoneType.GRANIT;
+            case "sandstein" -> this.stoneType = StoneType.SANDSTEIN;
         }
 
-        if(Objects.equals(weight.toLowerCase(), "mittel")){
-            this.stoneWeight = StoneWeight.MIDDLE;
-        } else if(Objects.equals(weight.toLowerCase(), "schwer")){
-            this.stoneWeight = StoneWeight.HEAVY;
-        } else {
-            this.stoneWeight = StoneWeight.LIGHT;
+        switch (weight.toLowerCase()) {
+            case "mittel" -> this.stoneWeight = StoneWeight.MIDDLE;
+            case "schwer" -> this.stoneWeight = StoneWeight.HEAVY;
+            case "leicht" -> this.stoneWeight = StoneWeight.LIGHT;
         }
     }
 
