@@ -61,7 +61,8 @@ public class Storage {
         String prodAtt;
 
         // check if the selected slot is block by a pallet in the front shelf
-        if(posZ != 0 && this.lager[0][posY][posX] != null){
+        if(posZ == 1 && this.lager[0][posY][posX] != null){
+            Logger.debug(this.getSlot(posX, posY, 0).toString() + " " + posZ + posY + posX);
             Logger.err("Slot at coords z:" + posZ + ", y: " + posY + ", x: " + posX + " blocked by a pallet in front of it");
             return false;
         }
@@ -119,6 +120,7 @@ public class Storage {
 
         // check if the selected slot is blocked by a pallet in the front shelf
         if(posZ != 0 && this.lager[0][posY][posX] != null){
+            Logger.debug(this.getSlot(posX, posY, 0).toString());
             Logger.err("Slot at coords z:" + posZ + ", y: " + posY + ", x: " + posX + " blocked by a pallet in front of it");
             return false;
         }
@@ -133,7 +135,10 @@ public class Storage {
         // Delete the other slot taken up by the BALKEN
         if(p.getNameAndProperty().equals("Holz:BALKEN")){
             int otherZ = posZ == 1 ? 0 : 1;
-            this.lager[otherZ][posY][posX] = null;
+            if(this.lager[otherZ][posY][posX] != null){
+                Logger.err("Slot ["+ posZ + "][" + posY + "][" + posX + "] already occupied");
+                return false;
+            } else this.lager[otherZ][posY][posX] = null;
         }
 
         this.lager[posZ][posY][posX] = null;
