@@ -70,9 +70,12 @@ public class Test {
         Test.successfullTests++;
     }
 
+    @SuppressWarnings({"unused"}) // used to hide the dead code warning
     private static void getOrder(){
         Product p = Test.l.getSlot(0, 0, 0);
-        if(p != null){
+        Logger.debug(p.getNameAndProperties());
+
+         if(p == null){
             Logger.err("Test get order failed");
             Test.failedTests++;
             return;
@@ -92,6 +95,22 @@ public class Test {
     }
 
     private static void blocking() {
+        Order _o = Test.o.get(3);
+        Order __o = Test.o.get(29);
+        boolean _f = Test.l.update(_o, 0,0,0);
+        boolean __f = Test.l.update(__o, 0,0,0);
+        Logger.debug(_f+" "+__f);
+
+        boolean _f1 = Test.l.update(_o, 1,0,0);
+        boolean __f1 = Test.l.update(__o, 1,0,0);
+        Logger.debug(_f1+" "+__f1);
+        if(_f && __f && _f1 && __f1){
+            Test.successfullTests++;
+        } else {
+            Logger.err("Test blocking order failed");
+            Test.failedTests++;
+            return;
+        }
     }
 
     private static void rearrangeProduct(){

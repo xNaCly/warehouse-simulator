@@ -1,9 +1,10 @@
 SRC_DIR := ./src
 BIN_DIR := ./bin
 FILES := $(shell find $(SRC_DIR) -name "*.java")
+CSV := ../Leistungsnachweis.csv
 
 all: build
-	cd ${BIN_DIR} && java Start ../Leistungsnachweis.csv ${CMD}
+	cd ${BIN_DIR} && java Start $(CSV) ${CMD}
 
 test: build
 	cd ${BIN_DIR} && java Test ../Leistungsnachweis.csv

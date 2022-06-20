@@ -32,10 +32,13 @@ Use `CMD` to pass command arguments:
 ```bash
 make all CMD="--debug"
 make all CMD="--silent"
-make all CMD="--headless"
+```
+
+Use `CSV` to specify a custom .csv file:
+```bash
+make all CSV="../../Test.csv"
 ```
 
 ## Cli reference:
 - `-s` / `--silent` to suppress any logs (except errors)
 - `-d` / `--debug` to display debug logs
-- `-h` / `--headless` to start in cli mode

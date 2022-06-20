@@ -145,26 +145,21 @@ public class Gui {
         JPanel container = new JPanel();
         container.setLayout(new GridLayout());
         JButton transactionButton = new JButton("Transaktionsliste");
-        JButton nextOrder = new JButton("Nächster Auftrag");
-        JButton skipOrder = new JButton("Auftrag überspringen");
+        JButton skipOrder = new JButton("Auftrag ablehnen");
 
 
         transactionButton.setActionCommand("list");
         transactionButton.setSize(250, 50);
 
 
-        nextOrder.setActionCommand("next");
-        nextOrder.setSize(250, 50);
 
         skipOrder.setActionCommand("skip");
         skipOrder.setSize(250, 50);
 
         transactionButton.addActionListener(new ButtonClickListener());
-        nextOrder.addActionListener(new ButtonClickListener());
         skipOrder.addActionListener(new ButtonClickListener());
 
         container.add(transactionButton);
-        container.add(nextOrder);
         container.add(skipOrder);
 
         this.r.add(container, BorderLayout.SOUTH);
@@ -178,34 +173,30 @@ public class Gui {
         Order _o = this.getCurOrder();
         boolean f = this.l.update(_o, x, y, z);
         if(f){
-            if(_o.insertOrder) this.slots[index].setText(this.l.getSlot(x,y,z).getNameAndProperties());
-            else this.slots[index].setText(String.format("slot:%d_%d_%d", z, y, x));
+            int otherZ = z == 0 ? 1 : 0;
+            if(_o.insertOrder){
+                this.slots[index].setText(this.l.getSlot(x,y,z).getNameAndProperties());
+                if(_o.product.getNameAndProperty().equalsIgnoreCase("holz:balken")){
+                    this.slots[z == 0 ? index+12 : index-12].setText(this.l.getSlot(x,y,otherZ).getNameAndProperties());
+                }
+            } 
+            else {
+                this.slots[index].setText(String.format("slot:%d_%d_%d", z, y, x));
+                if(_o.product.getNameAndProperty().equalsIgnoreCase("holz:balken")){
+                    this.slots[z == 0 ? index+12 : index-12].setText(String.format("slot:%d_%d_%d", otherZ, y, x));
+                }
+            }
             if(this.currentOrderIndex == this.o.size()-1) this.currentOrderIndex = 0;
             else this.currentOrderIndex++;
         }
         this.rerenderHud();
-        Logger.debug(""+this.currentOrderIndex);
     }
 
     private void skipOrder(){
         Order curOrder = this.getCurOrder();
-        this.currentOrderIndex++;
-        if(this.currentOrderIndex >= this.o.size()){
-            this.currentOrderIndex = 0;
-        }
+        if(this.currentOrderIndex == this.o.size()-1) this.currentOrderIndex = 0;
+        else this.currentOrderIndex++;
         this.b.updateBalance(curOrder.price, "Auftrag abgelehnt: -" + curOrder.price + "€", true);
-        this.rerenderHud();
-        if(this.popOutActive){
-            this.destroyTransactionsWindow();
-            this.popOutTransactions();
-        }
-    }
-
-    private void nextOrder(){
-        if(this.currentOrderIndex >= this.o.size()){
-            this.currentOrderIndex = 0;
-        }
-        this.currentOrderIndex++;
         this.rerenderHud();
         if(this.popOutActive){
             this.destroyTransactionsWindow();
@@ -219,7 +210,6 @@ public class Gui {
             Logger.debug("Event: "+command);
             switch(command){
                 case "list" -> popOutTransactions();
-                case "next" -> nextOrder();
                 case "skip" -> skipOrder();
                 default -> {
                     if(command.startsWith("slot:")){
