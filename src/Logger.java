@@ -6,6 +6,7 @@ import java.util.Date;
 public class Logger {
     static boolean debug;
     static boolean silent;
+    static boolean headless;
     static JFrame root;
 
     static public String getDate(){
@@ -32,7 +33,7 @@ public class Logger {
         String file = Thread.currentThread().getStackTrace()[2].getFileName();
         text = String.format("%s (%s l:%d)", text, file, line);
         System.out.printf("[ERROR][%s]: %s\n", Logger.getDate(), text);
-        JOptionPane.showMessageDialog(root, text);
+        if(!Logger.headless) JOptionPane.showMessageDialog(root, text);
     }
 
     /**
