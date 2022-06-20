@@ -28,3 +28,5 @@ jobs:
         uses: actions/setup-java@v3.3.0
       - name: build
         run: make build
+      - name: test
+        run: make test
