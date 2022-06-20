@@ -15,6 +15,7 @@ public class Gui {
     private int currentOrderIndex;
     private boolean popOutActive;
     private JButton[] slots = new JButton[24];
+    private boolean rearrangeMode;
 
     public static void setUIFont (javax.swing.plaf.FontUIResource f){
         Enumeration<Object> keys = UIManager.getDefaults().keys();
@@ -99,10 +100,10 @@ public class Gui {
         container.setLayout(new BorderLayout());
         this.balanceLabel = new JLabel();
         this.currentOrder = new JLabel();
-        this.rerenderHud();
-        container.add(this.currentOrder, BorderLayout.WEST);
-        container.add(this.balanceLabel, BorderLayout.EAST);
+        container.add(this.currentOrder, BorderLayout.EAST);
+        container.add(this.balanceLabel, BorderLayout.WEST);
         this.r.add(container, BorderLayout.NORTH);
+        this.rerenderHud();
     }
 
     private void rerenderHud(){
@@ -142,25 +143,28 @@ public class Gui {
     }
 
     private void renderButtons(){
+        JCheckBox jb = new JCheckBox("Rearrange mode");
         JPanel container = new JPanel();
         container.setLayout(new GridLayout());
         JButton transactionButton = new JButton("Transaktionsliste");
         JButton skipOrder = new JButton("Auftrag ablehnen");
 
+        jb.setActionCommand("re");
+        jb.setSize(250, 50);
 
         transactionButton.setActionCommand("list");
         transactionButton.setSize(250, 50);
-
-
 
         skipOrder.setActionCommand("skip");
         skipOrder.setSize(250, 50);
 
         transactionButton.addActionListener(new ButtonClickListener());
         skipOrder.addActionListener(new ButtonClickListener());
+        jb.addActionListener(new ButtonClickListener());
 
         container.add(transactionButton);
         container.add(skipOrder);
+        container.add(jb);
 
         this.r.add(container, BorderLayout.SOUTH);
     }
@@ -211,6 +215,7 @@ public class Gui {
             switch(command){
                 case "list" -> popOutTransactions();
                 case "skip" -> skipOrder();
+                case "re" -> rearrangeMode = rearrangeMode ? false : true;
                 default -> {
                     if(command.startsWith("slot:")){
                         try {
