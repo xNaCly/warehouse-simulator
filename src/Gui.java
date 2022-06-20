@@ -178,7 +178,7 @@ public class Gui {
         Order _o = this.getCurOrder();
         boolean f = this.l.update(_o, x, y, z);
         if(f){
-            if(_o.insertOrder) this.slots[index].setText(this.l.getSlot(x,y,z).getNameAndProperty());
+            if(_o.insertOrder) this.slots[index].setText(this.l.getSlot(x,y,z).getNameAndProperties());
             else this.slots[index].setText(String.format("slot:%d_%d_%d", z, y, x));
             if(this.currentOrderIndex == this.o.size()-1) this.currentOrderIndex = 0;
             else this.currentOrderIndex++;
