@@ -3,6 +3,8 @@ import java.util.ArrayList;
 public class Balance {
     private int balance;
     private ArrayList<String> transactions = new ArrayList<>();
+    private int cost;
+    private int income;
 
     /**
      * Balance manages a list of transactions and a balance
@@ -19,12 +21,25 @@ public class Balance {
      */
     public void updateBalance(int amount, String log, boolean remove){
         transactions.add("("+ (transactions.size()+1) +") "+log);
-        if(remove) this.balance -= amount;
-        else this.balance += amount;
+        if(remove){
+            this.balance -= amount;
+            this.cost += amount;
+        } else {
+            this.balance += amount;
+            this.income += amount;
+        }
     }
 
     public int getBalance(){
         return this.balance;
+    }
+
+    public int getCost(){
+        return this.cost;
+    }
+
+    public int getIncome(){
+        return this.income;
     }
 
     public ArrayList<String> getTransactions(){

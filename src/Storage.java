@@ -28,7 +28,7 @@ public class Storage {
     }
 
     private boolean insert(Order o, int posX, int posY, int posZ){
-        String feedback = String.format("[Order: %d] %s: %d€ (Einlagerung)", o.id, o.product.getNameAndProperties().replace(":", " "), o.price);
+        String feedback = String.format("[Auftrag: %d] %s: %d€ (Einlagerung)", o.id, o.product.getNameAndProperties().replace(":", " "), o.price);
 
         if(!this.insertInternal(o.product, posX, posY, posZ)) return false;
         this.balance.updateBalance(o.price, feedback, false);
@@ -37,7 +37,7 @@ public class Storage {
     }
 
     private boolean remove(Order o, int posX, int posY, int posZ){
-        String feedback = String.format("[Order: %d] %s: %d€ (Auslagerung)", o.id, o.product.getNameAndProperties().replace(":", " "), o.price);
+        String feedback = String.format("[Auftrag: %d] %s: %d€ (Auslagerung)", o.id, o.product.getNameAndProperties().replace(":", " "), o.price);
 
         if(!this.removeInternal(o.product, posX, posY, posZ)) return false;
 
@@ -51,9 +51,10 @@ public class Storage {
      */
     public boolean rearrange(int targetX, int targetY, int targetZ, int destX, int destY, int destZ){
         Product p = this.lager[targetX][targetY][targetZ];
-        String feedback = String.format("[Order: M] %s: -100€ (Move)", p.getNameAndProperties().replace(":", " "), 300);
-        this.balance.updateBalance(300, feedback,  true);
-        return this.insertInternal(p, destX, destY, destZ) && this.removeInternal(p, targetX, targetY, targetZ);
+        String feedback = String.format("[Auftrag: M] %s: -100€ (Move)", p.getNameAndProperties().replace(":", " "), 300);
+        boolean f = this.insertInternal(p, destX, destY, destZ) && this.removeInternal(p, targetX, targetY, targetZ);
+        if(f) this.balance.updateBalance(300, feedback,  true);
+        return f;
     }
 
     private boolean insertInternal(Product p, int posX, int posY, int posZ){
@@ -120,7 +121,7 @@ public class Storage {
 
         // check if the selected slot is blocked by a pallet in the front shelf
         if(posZ != 0 && this.lager[0][posY][posX] != null){
-            Logger.err("Slot at coords z:" + posZ + ", y: " + posY + ", x: " + posX + " blocked by a pallet in front of it");
+            Logger.err("Slot ["+ posZ + "][" + posY + "][" + posX + "] is occupied");
             return false;
         }
 
@@ -150,7 +151,7 @@ public class Storage {
     public boolean recycle(int posX, int posY, int posZ){
         Product p = this.lager[posZ][posY][posX];
         if(p == null || p.getNameAndProperties() == null) return false;
-        String feedback = String.format("[Order: R] %s: -300€ (Recycling)", p.getNameAndProperties().replace(":", " "), 300);
+        String feedback = String.format("[Auftrag: R] %s: -300€ (Recycling)", p.getNameAndProperties().replace(":", " "), 300);
         this.balance.updateBalance(300, feedback,  true);
         boolean f = this.removeInternal(p, posX, posY, posZ);
         if(f) Logger.suc("Recycled Item at ["+ posZ + "][" + posY + "][" + posX + "]: " + p.getNameAndProperties());

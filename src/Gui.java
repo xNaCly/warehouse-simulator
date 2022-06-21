@@ -16,6 +16,9 @@ public class Gui {
     private boolean popOutActive;
     private JButton[] slots = new JButton[24];
     private boolean rearrangeMode;
+    private boolean recycleMode;
+    private int[] rearrangeSlot = {-1, -1, -1};
+    private boolean orderFulfilled;
 
     public static void setUIFont (javax.swing.plaf.FontUIResource f){
         Enumeration<Object> keys = UIManager.getDefaults().keys();
@@ -58,11 +61,11 @@ public class Gui {
     }
 
     private void destroyTransactionsWindow(){
-        if(this.transactionsWindow != null){
-            transactionsWindow.removeAll();
-            transactionsWindow.setVisible(false);
-            popOutActive = false;
-            transactionsWindow.dispose();
+        if(this.popOutActive){
+            if(this.transactionsWindow != null){
+                this.transactionsWindow.dispose();
+                this.popOutActive = false;
+            }
         }
     }
 
@@ -70,9 +73,8 @@ public class Gui {
         if(this.popOutActive) return;
         this.transactionsWindow = new JFrame("Warehouse simulator - Transactions");
         this.transactionsWindow.setSize(1024, 500);
-        this.transactionsWindow.setVisible(true);
 
-        String[] headerRow = {"Transaction ID", "Transaction"};
+        String[] headerRow = {"Transaktions ID", "Transaktion"};
         String[][] data = new String[this.b.getTransactions().size()][2];
         ArrayList<String> transactions = this.b.getTransactions();
 
@@ -84,7 +86,14 @@ public class Gui {
 
         JTable jt = new JTable(data, headerRow);
         JScrollPane jp = new JScrollPane(jt);
-        this.transactionsWindow.add(jp);
+        // TODO: implement income and cost display
+        JPanel container = new JPanel();
+        JLabel incomeLabel = new JLabel("Umsätze: " + this.b.getIncome());
+        JLabel costLabel = new JLabel("Kosten: " + this.b.getCost());
+        container.add(incomeLabel);
+        container.add(costLabel);
+        this.transactionsWindow.add(jp, BorderLayout.NORTH);
+        this.transactionsWindow.add(container, BorderLayout.SOUTH);
 
         // remove all Lables in transaction window after closing it
         this.transactionsWindow.addWindowListener(new WindowAdapter() {
@@ -92,7 +101,9 @@ public class Gui {
                 destroyTransactionsWindow();
             }
         });
+
         this.popOutActive = true;
+        this.transactionsWindow.setVisible(true);
     }
 
     private void hud(){
@@ -108,7 +119,8 @@ public class Gui {
 
     private void rerenderHud(){
         try{
-            this.currentOrder.setText(this.o.get(this.currentOrderIndex).toString().replace(":", " "));
+            if(this.orderFulfilled) this.currentOrder.setText("Kein aktiver Auftrag");
+            else this.currentOrder.setText(this.o.get(this.currentOrderIndex).toString().replace(":", " "));
         } catch (IndexOutOfBoundsException ignored){}
         this.balanceLabel.setText("Balance: " + this.b.getBalance() + "€");
     }
@@ -143,28 +155,40 @@ public class Gui {
     }
 
     private void renderButtons(){
-        JCheckBox jb = new JCheckBox("Rearrange mode");
         JPanel container = new JPanel();
         container.setLayout(new GridLayout());
-        JButton transactionButton = new JButton("Transaktionsliste");
+        JCheckBox rearrangeBox = new JCheckBox("Verschiebe Modus");
+        JCheckBox recycleBox = new JCheckBox("Verschrotten Modus");
+        JButton transactionButton = new JButton("Bilanz");
         JButton skipOrder = new JButton("Auftrag ablehnen");
+        JButton nextOrder = new JButton("Neuer Auftrag");
 
-        jb.setActionCommand("re");
-        jb.setSize(250, 50);
+        rearrangeBox.setActionCommand("move");
+        rearrangeBox.setSize(250, 50);
+
+        recycleBox.setActionCommand("recycle");
+        recycleBox.setSize(250, 50);
 
         transactionButton.setActionCommand("list");
         transactionButton.setSize(250, 50);
+
+        nextOrder.setActionCommand("next");
+        nextOrder.setSize(250, 50);
 
         skipOrder.setActionCommand("skip");
         skipOrder.setSize(250, 50);
 
         transactionButton.addActionListener(new ButtonClickListener());
         skipOrder.addActionListener(new ButtonClickListener());
-        jb.addActionListener(new ButtonClickListener());
+        rearrangeBox.addActionListener(new ButtonClickListener());
+        recycleBox.addActionListener(new ButtonClickListener());
+        nextOrder.addActionListener(new ButtonClickListener());
 
         container.add(transactionButton);
         container.add(skipOrder);
-        container.add(jb);
+        container.add(nextOrder);
+        container.add(rearrangeBox);
+        container.add(recycleBox);
 
         this.r.add(container, BorderLayout.SOUTH);
     }
@@ -173,7 +197,38 @@ public class Gui {
         return this.o.get(this.currentOrderIndex);
     }
 
+    // private void rearrangeSlot(int x, int y, int z){
+    //     if(rearrangeSlot[0] == -1 && rearrangeSlot[1] == -1 && rearrangeSlot[2] == -1){
+    //         rearrangeSlot = new int[]{x,y,z};
+    //     }
+    //     Logger.debug("old slot: "+rearrangeSlot[0]+" "+rearrangeSlot[1]+" "+rearrangeSlot[2]);
+    //     Logger.debug("new slot: "+x+" "+y+" "+z);
+    //     l.rearrange(rearrangeSlot[0], rearrangeSlot[1], rearrangeSlot[2], x, y, z);
+    // }
+
+    private void recycleSlot(int x, int y, int z, int i){
+        JButton slot = this.slots[i];
+        String prod = slot.getText();
+
+        if(prod.contains("BALKEN")){
+            int otherZ = z == 0 ? 1 : 0;
+            this.slots[z == 0 ? i+12 : i-12].setText(String.format("slot:%d_%d_%d", otherZ, y, x));
+        }
+
+        this.l.recycle(x, y, z);
+        slot.setText(String.format("slot:%d_%d_%d", z, y, x));
+        this.rerenderHud();
+        if(this.popOutActive){
+            this.destroyTransactionsWindow();
+            this.popOutTransactions();
+        }
+    }
+
     private void fulFillOrder(int x, int y, int z, int index){
+        if(this.orderFulfilled){
+            Logger.err("Kein aktiver Auftrag");
+            return;
+        }
         Order _o = this.getCurOrder();
         boolean f = this.l.update(_o, x, y, z);
         if(f){
@@ -190,13 +245,20 @@ public class Gui {
                     this.slots[z == 0 ? index+12 : index-12].setText(String.format("slot:%d_%d_%d", otherZ, y, x));
                 }
             }
-            if(this.currentOrderIndex == this.o.size()-1) this.currentOrderIndex = 0;
-            else this.currentOrderIndex++;
+            this.orderFulfilled = true;
         }
         this.rerenderHud();
+        if(this.popOutActive){
+            this.destroyTransactionsWindow();
+            this.popOutTransactions();
+        }
     }
 
     private void skipOrder(){
+        if(this.orderFulfilled){
+            Logger.err("Kein aktiver Auftrag");
+            return;
+        }
         Order curOrder = this.getCurOrder();
         if(this.currentOrderIndex == this.o.size()-1) this.currentOrderIndex = 0;
         else this.currentOrderIndex++;
@@ -208,6 +270,17 @@ public class Gui {
         }
     }
 
+    private void nextOrder(){
+        if(this.orderFulfilled){
+            if(this.currentOrderIndex == this.o.size()-1) this.currentOrderIndex = 0;
+            else this.currentOrderIndex++;
+            this.orderFulfilled = false;
+            this.rerenderHud();
+        } else {
+            Logger.err("Auftrag muss erfüllt oder übersprungen werden, bevor ein neuer Auftrag angefordert werden kann.");
+        }
+    }
+
     private class ButtonClickListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
@@ -215,17 +288,34 @@ public class Gui {
             switch(command){
                 case "list" -> popOutTransactions();
                 case "skip" -> skipOrder();
-                case "re" -> rearrangeMode = rearrangeMode ? false : true;
+                case "next" -> nextOrder();
+                case "move" -> {
+                    rearrangeMode = rearrangeMode ? false : true;
+                    rearrangeSlot = new int[]{-1,-1,-1};
+                }
+                case "recycle" -> recycleMode = recycleMode ? false : true;
                 default -> {
                     if(command.startsWith("slot:")){
+                        int x = -1;
+                        int y = -1;
+                        int z = -1;
+                        int i = -1;
+
                         try {
                             String[] coords = command.split(":")[1].split("_");
-                            int z = Integer.parseInt(coords[0]);
-                            int y = Integer.parseInt(coords[1]);
-                            int x = Integer.parseInt(coords[2]);
-                            int index = Integer.parseInt(coords[3]);
-                            fulFillOrder(x,y,z, index);
+                            z = Integer.parseInt(coords[0]);
+                            y = Integer.parseInt(coords[1]);
+                            x = Integer.parseInt(coords[2]);
+                            i = Integer.parseInt(coords[3]);
                         } catch (ArrayIndexOutOfBoundsException ignored){}
+
+                        if(recycleMode){
+                            recycleSlot(x, y, z, i);
+                        } /* else if(rearrangeMode){
+                            rearrangeSlot(x, y, z);
+                        }*/ else {
+                            fulFillOrder(x, y, z, i);
+                        }
                     }
                 }
             }
