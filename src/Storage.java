@@ -50,9 +50,13 @@ public class Storage {
      * move target slot to dest slot
      */
     public boolean rearrange(int targetX, int targetY, int targetZ, int destX, int destY, int destZ){
+        if(targetX == destX || targetY == destY || targetZ == destZ){
+            Logger.err("Can't move product to the same slot");
+            return false;
+        }
         Product p = this.lager[targetX][targetY][targetZ];
         String feedback = String.format("[Auftrag: M] %s: -100€ (Move)", p.getNameAndProperties().replace(":", " "), 300);
-        boolean f = this.insertInternal(p, destX, destY, destZ) && this.removeInternal(p, targetX, targetY, targetZ);
+        boolean f =  this.removeInternal(p, targetX, targetY, targetZ) && this.insertInternal(p, destX, destY, destZ);
         if(f) this.balance.updateBalance(300, feedback,  true);
         return f;
     }

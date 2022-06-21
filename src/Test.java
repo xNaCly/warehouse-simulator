@@ -21,6 +21,7 @@ public class Test {
         Test.getOrder();
         Test.removeOrder();
         Test.blocking();
+        Test.move();
         // Test.trashProduct();
         Test.end();
     }
@@ -111,6 +112,18 @@ public class Test {
             Test.failedTests++;
             return;
         }
+    }
+
+    private static void move(){
+        Order _o = Test.o.get(0);
+        Test.l.update(_o, 0,0,0);
+        boolean f = Test.l.rearrange(0,0,0,1,1,1);
+        if(!f){
+            Logger.err("Test move product failed");
+            Test.failedTests++;
+            return;
+        }
+        Test.successfullTests++;
     }
 
     private static void rearrangeProduct(){

@@ -86,7 +86,6 @@ public class Gui {
 
         JTable jt = new JTable(data, headerRow);
         JScrollPane jp = new JScrollPane(jt);
-        // TODO: implement income and cost display
         JPanel container = new JPanel();
         JLabel incomeLabel = new JLabel("Umsätze: " + this.b.getIncome());
         JLabel costLabel = new JLabel("Kosten: " + this.b.getCost());
@@ -197,14 +196,15 @@ public class Gui {
         return this.o.get(this.currentOrderIndex);
     }
 
-    // private void rearrangeSlot(int x, int y, int z){
-    //     if(rearrangeSlot[0] == -1 && rearrangeSlot[1] == -1 && rearrangeSlot[2] == -1){
-    //         rearrangeSlot = new int[]{x,y,z};
-    //     }
-    //     Logger.debug("old slot: "+rearrangeSlot[0]+" "+rearrangeSlot[1]+" "+rearrangeSlot[2]);
-    //     Logger.debug("new slot: "+x+" "+y+" "+z);
-    //     l.rearrange(rearrangeSlot[0], rearrangeSlot[1], rearrangeSlot[2], x, y, z);
-    // }
+    private void rearrangeSlot(int x, int y, int z){
+        if(rearrangeSlot[0] == -1 && rearrangeSlot[1] == -1 && rearrangeSlot[2] == -1){
+            rearrangeSlot = new int[]{x,y,z};
+        } else {
+            l.rearrange(rearrangeSlot[0], rearrangeSlot[1], rearrangeSlot[2], x, y, z);
+        }
+        Logger.debug("old slot: "+rearrangeSlot[0]+" "+rearrangeSlot[1]+" "+rearrangeSlot[2]);
+        Logger.debug("new slot: "+x+" "+y+" "+z);
+    }
 
     private void recycleSlot(int x, int y, int z, int i){
         JButton slot = this.slots[i];
@@ -281,7 +281,7 @@ public class Gui {
         }
     }
 
-    private class ButtonClickListener implements ActionListener{
+    private class ButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
             Logger.debug("Event: "+command);
@@ -311,9 +311,9 @@ public class Gui {
 
                         if(recycleMode){
                             recycleSlot(x, y, z, i);
-                        } /* else if(rearrangeMode){
+                        } else if(rearrangeMode){
                             rearrangeSlot(x, y, z);
-                        }*/ else {
+                        } else {
                             fulFillOrder(x, y, z, i);
                         }
                     }
