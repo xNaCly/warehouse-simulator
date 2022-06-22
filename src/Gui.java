@@ -17,7 +17,7 @@ public class Gui {
     private JButton[] slots = new JButton[24];
     private boolean rearrangeMode;
     private boolean recycleMode;
-    private int[] rearrangeSlot = {-1, -1, -1};
+    private int[] rearrangeSlot = {-1, -1, -1, -1};
     private boolean orderFulfilled;
 
     public static void setUIFont (javax.swing.plaf.FontUIResource f){
@@ -45,7 +45,7 @@ public class Gui {
 
     private void start(){
         this.r.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.r.setSize(600,600);
+        this.r.setSize(1024,512);
         this.r.setLayout(new BorderLayout());
 
         this.renderButtons();
@@ -196,14 +196,17 @@ public class Gui {
         return this.o.get(this.currentOrderIndex);
     }
 
-    private void rearrangeSlot(int x, int y, int z){
+    private void rearrangeSlot(int x, int y, int z, int i){
         if(rearrangeSlot[0] == -1 && rearrangeSlot[1] == -1 && rearrangeSlot[2] == -1){
-            rearrangeSlot = new int[]{x,y,z};
+            rearrangeSlot = new int[]{x,y,z,i};
         } else {
-            l.rearrange(rearrangeSlot[0], rearrangeSlot[1], rearrangeSlot[2], x, y, z);
+            boolean feedback = l.rearrange(rearrangeSlot[0], rearrangeSlot[1], rearrangeSlot[2], x, y, z);
+            if(!feedback) return;
+            Logger.debug("test: "+ rearrangeSlot[3]);
+            this.slots[rearrangeSlot[3]].setText(String.format("slot:%d_%d_%d", rearrangeSlot[2], rearrangeSlot[1], rearrangeSlot[0]));
+            this.slots[i].setText(this.l.getSlot(x,y,z).getNameAndProperties());
+            rearrangeSlot = new int[]{-1,-1,-1,-1};
         }
-        Logger.debug("old slot: "+rearrangeSlot[0]+" "+rearrangeSlot[1]+" "+rearrangeSlot[2]);
-        Logger.debug("new slot: "+x+" "+y+" "+z);
     }
 
     private void recycleSlot(int x, int y, int z, int i){
@@ -291,7 +294,7 @@ public class Gui {
                 case "next" -> nextOrder();
                 case "move" -> {
                     rearrangeMode = rearrangeMode ? false : true;
-                    rearrangeSlot = new int[]{-1,-1,-1};
+                    rearrangeSlot = new int[]{-1,-1,-1,-1};
                 }
                 case "recycle" -> recycleMode = recycleMode ? false : true;
                 default -> {
@@ -312,7 +315,7 @@ public class Gui {
                         if(recycleMode){
                             recycleSlot(x, y, z, i);
                         } else if(rearrangeMode){
-                            rearrangeSlot(x, y, z);
+                            rearrangeSlot(x, y, z, i);
                         } else {
                             fulFillOrder(x, y, z, i);
                         }

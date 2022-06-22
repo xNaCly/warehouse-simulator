@@ -50,15 +50,20 @@ public class Storage {
      * move target slot to dest slot
      */
     public boolean rearrange(int targetX, int targetY, int targetZ, int destX, int destY, int destZ){
-        if(targetX == destX || targetY == destY || targetZ == destZ){
+        if(targetX == destX && targetY == destY && targetZ == destZ){
             Logger.err("Can't move product to the same slot");
             return false;
         }
-        Product p = this.lager[targetX][targetY][targetZ];
+        Product p = this.lager[targetZ][targetY][targetX];
+        if(p == null){
+            Logger.err("Slot is empty");
+            return false;
+        }
         String feedback = String.format("[Auftrag: M] %s: -100€ (Move)", p.getNameAndProperties().replace(":", " "), 300);
-        boolean f =  this.removeInternal(p, targetX, targetY, targetZ) && this.insertInternal(p, destX, destY, destZ);
-        if(f) this.balance.updateBalance(300, feedback,  true);
-        return f;
+        boolean feedbackRemove = this.removeInternal(p, targetX, targetY, targetZ);
+        boolean feedbackInsert = this.insertInternal(p, destX, destY, destZ);
+        if(feedbackRemove && feedbackInsert) this.balance.updateBalance(300, feedback,  true);
+        return feedbackRemove && feedbackInsert;
     }
 
     private boolean insertInternal(Product p, int posX, int posY, int posZ){
@@ -154,7 +159,10 @@ public class Storage {
      */
     public boolean recycle(int posX, int posY, int posZ){
         Product p = this.lager[posZ][posY][posX];
-        if(p == null || p.getNameAndProperties() == null) return false;
+        if(p == null || p.getNameAndProperties() == null){
+            Logger.err("Can't recycle an empty slot");
+            return false;
+        }
         String feedback = String.format("[Auftrag: R] %s: -300€ (Recycling)", p.getNameAndProperties().replace(":", " "), 300);
         this.balance.updateBalance(300, feedback,  true);
         boolean f = this.removeInternal(p, posX, posY, posZ);
