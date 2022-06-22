@@ -7,6 +7,7 @@ public class Logger {
     static boolean debug;
     static boolean silent;
     static boolean headless;
+    static int curTest;
     static JFrame root;
 
     static public String getDate(){
@@ -21,6 +22,15 @@ public class Logger {
      */
     static void inf(String text){
         if(!silent) System.out.printf("[INFO][%s]: %s\n", Logger.getDate(), text);
+    }
+
+    /**
+     * prints text to stdout with TEST as the prefix 
+     * @param text 
+     */
+    static void test(String text){
+        Logger.curTest++;
+        if(headless) System.out.printf("[TEST][%d][%s]: %s\n", Logger.curTest, Logger.getDate(), text);
     }
 
     /**

@@ -1,3 +1,7 @@
+/**
+ * Unit tests for internal components, are used in github ci checks
+ * author: https://github.com/xnacly
+ * */
 import java.util.ArrayList;
 import product.*;
 
@@ -11,7 +15,7 @@ public class Test {
 
     public static void main(String[] args){
         Logger.silent = true;
-        Logger.debug = true;
+        Logger.debug = false;
         Logger.headless = true;
         Test.initBalance();
         Test.initLager();
@@ -22,32 +26,34 @@ public class Test {
         Test.removeOrder();
         Test.blocking();
         Test.move();
-        // Test.trashProduct();
+        Test.trashProduct();
         Test.end();
     }
-
 
     private static void end(){
         int total = Test.failedTests + Test.successfullTests;
         int percentF = Test.failedTests * 100 / total;
         int percentS = Test.successfullTests * 100 / total;
-        System.out.printf("test results: %d (%d%%) passed; %d (%d%%) failed; %d measured\n", Test.successfullTests, percentS, Test.failedTests, percentF, total);
+        System.out.printf("\ntest results: %d (%d%%) passed; %d (%d%%) failed; %d measured\n", Test.successfullTests, percentS, Test.failedTests, percentF, total);
         if(Test.failedTests != 0) System.exit(1);
     }
 
     private static void initBalance(){
         Test.b = new Balance();
         Test.successfullTests++;
+        Logger.test("Balance Test success");
     }
 
     private static void initLager(){
         Test.l = new Storage(b);
         Test.successfullTests++;
+        Logger.test("Storage Test success");
     }
 
     private static void initFs(String filename){
         Test.fs = new Fs(filename);
         Test.successfullTests++;
+        Logger.test("Filesystem Test success");
     }
     
     private static void parseOrders(){
@@ -58,6 +64,8 @@ public class Test {
             return;
         }
         Test.successfullTests++;
+
+        Logger.test("parse orders Test success");
     }
 
     private static void insertOrder(){
@@ -69,12 +77,12 @@ public class Test {
             return;
         }
         Test.successfullTests++;
+        Logger.test("insert order Test success");
     }
 
     @SuppressWarnings({"unused"}) // used to hide the dead code warning
     private static void getOrder(){
         Product p = Test.l.getSlot(0, 0, 0);
-        Logger.debug(p.getNameAndProperties());
 
          if(p == null){
             Logger.err("Test get order failed");
@@ -82,6 +90,7 @@ public class Test {
             return;
         }
         Test.successfullTests++;
+        Logger.test("get order Test success");
     }
 
     private static void removeOrder(){
@@ -93,6 +102,7 @@ public class Test {
             return;
         }
         Test.successfullTests++;
+        Logger.test("remove order Test success");
     }
 
     private static void blocking() {
@@ -100,13 +110,12 @@ public class Test {
         Order __o = Test.o.get(29);
         boolean _f = Test.l.update(_o, 0,0,0);
         boolean __f = Test.l.update(__o, 0,0,0);
-        Logger.debug(_f+" "+__f);
 
         boolean _f1 = Test.l.update(_o, 1,0,0);
         boolean __f1 = Test.l.update(__o, 1,0,0);
-        Logger.debug(_f1+" "+__f1);
         if(_f && __f && _f1 && __f1){
             Test.successfullTests++;
+            Logger.test("blocking product Test success");
         } else {
             Logger.err("Test blocking order failed");
             Test.failedTests++;
@@ -118,27 +127,25 @@ public class Test {
         Order _o = Test.o.get(0);
         Test.l.update(_o, 0,0,0);
         boolean f = Test.l.rearrange(0,0,0,1,1,1);
-        if(!f){
+        boolean f1 = Test.l.getSlot(1,1,1).equals(_o.product);
+        if(!f || !f1){
             Logger.err("Test move product failed");
             Test.failedTests++;
             return;
         }
         Test.successfullTests++;
+        Logger.test("move product Test success");
     }
 
-    private static void rearrangeProduct(){
-
+    private static void trashProduct(){
+        Test.l.update(o.get(0), 0, 0, 0);
+        boolean f = Test.l.recycle(0,0,0);
+        if(!f){
+            Logger.err("Test recylce product failed");
+            Test.failedTests++;
+            return;
+        }
+        Test.successfullTests++;
+        Logger.test("recycle product Test success");
     }
-
-    // private static void trashProduct(){
-    //     Test.l.getSlot(0,0,0);
-    //     Test.l.update(o.get(0), 0, 0, 0);
-    //     boolean f = Test.l.recycle(0,0,0);
-    //     if(!f){
-    //         Logger.err("Test trash product failed");
-    //         Test.failedTests++;
-    //         return;
-    //     }
-    //     Test.successfullTests++;
-    // }
 }
