@@ -43,7 +43,7 @@ public class Fs {
                     if(line.startsWith("Auftrag")) continue;
                     Order o = this.parseCSV(line);
                     orders.add(o);
-                    Logger.debug("parsed item (" + i + ") "+ o.toString() + " from file");
+                    Logger.debug("parsed item (" + i + ") "+ o + " from file");
                     i++;
                 }
                 sc.close();

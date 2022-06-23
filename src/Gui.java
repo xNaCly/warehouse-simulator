@@ -132,7 +132,7 @@ public class Gui {
         JPanel jp2 = new JPanel();
         jp2.setLayout(new GridLayout(3, 4));
         for(int i = 0, z = 0; z < 2; z++){
-            for(int y = 0; y < 3; y++){
+            for(int y = 2; y > -1; y--){
                 for(int x = 0; x < 4; x++){
                     String s = String.format("slot:%d_%d_%d_%d", z,y,x,i);
                     JButton jb = new JButton(s.substring(0, 10));
