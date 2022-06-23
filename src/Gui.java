@@ -14,12 +14,13 @@ public class Gui {
     private final ArrayList<Order> o;
     private int currentOrderIndex;
     private boolean popOutActive;
-    private JButton[] slots = new JButton[24];
+    private final JButton[] slots = new JButton[24];
     private boolean rearrangeMode;
     private boolean recycleMode;
     private int[] rearrangeSlot = {-1, -1, -1, -1};
     private boolean orderFulfilled;
-
+    private JCheckBox rearrangeBox;
+    private JCheckBox recycleBox;
     public static void setUIFont (javax.swing.plaf.FontUIResource f){
         Enumeration<Object> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
@@ -138,7 +139,6 @@ public class Gui {
                     jb.setActionCommand(s);
                     jb.addActionListener(new ButtonClickListener());
                     Logger.debug("new "+s);
-                    jb.setSize(100, 100);
 
                     if(z == 0) jp1.add(jb);
                     else jp2.add(jb);
@@ -156,17 +156,17 @@ public class Gui {
     private void renderButtons(){
         JPanel container = new JPanel();
         container.setLayout(new GridLayout());
-        JCheckBox rearrangeBox = new JCheckBox("Verschiebe Modus");
-        JCheckBox recycleBox = new JCheckBox("Verschrotten Modus");
+        this.rearrangeBox = new JCheckBox("Verschiebe Modus");
+        this.recycleBox = new JCheckBox("Verschrotten Modus");
         JButton transactionButton = new JButton("Bilanz");
         JButton skipOrder = new JButton("Auftrag ablehnen");
         JButton nextOrder = new JButton("Neuer Auftrag");
 
-        rearrangeBox.setActionCommand("move");
-        rearrangeBox.setSize(250, 50);
+        this.rearrangeBox.setActionCommand("move");
+        this.rearrangeBox.setSize(250, 50);
 
-        recycleBox.setActionCommand("recycle");
-        recycleBox.setSize(250, 50);
+        this.recycleBox.setActionCommand("recycle");
+        this.recycleBox.setSize(250, 50);
 
         transactionButton.setActionCommand("list");
         transactionButton.setSize(250, 50);
@@ -186,8 +186,8 @@ public class Gui {
         container.add(transactionButton);
         container.add(skipOrder);
         container.add(nextOrder);
-        container.add(rearrangeBox);
-        container.add(recycleBox);
+        container.add(this.rearrangeBox);
+        container.add(this.recycleBox);
 
         this.r.add(container, BorderLayout.SOUTH);
     }
@@ -201,10 +201,10 @@ public class Gui {
             rearrangeSlot = new int[]{x,y,z,i};
         } else {
             boolean feedback = l.rearrange(rearrangeSlot[0], rearrangeSlot[1], rearrangeSlot[2], x, y, z);
-            if(!feedback) return;
-            Logger.debug("test: "+ rearrangeSlot[3]);
-            this.slots[rearrangeSlot[3]].setText(String.format("slot:%d_%d_%d", rearrangeSlot[2], rearrangeSlot[1], rearrangeSlot[0]));
-            this.slots[i].setText(this.l.getSlot(x,y,z).getNameAndProperties());
+            if(feedback){
+                this.slots[rearrangeSlot[3]].setText(String.format("slot:%d_%d_%d", rearrangeSlot[2], rearrangeSlot[1], rearrangeSlot[0]));
+                this.slots[i].setText(this.l.getSlot(x,y,z).getNameAndProperties());
+            }
             rearrangeSlot = new int[]{-1,-1,-1,-1};
         }
     }
@@ -236,16 +236,17 @@ public class Gui {
         boolean f = this.l.update(_o, x, y, z);
         if(f){
             int otherZ = z == 0 ? 1 : 0;
+            int i = z == 0 ? index + 12 : index - 12;
             if(_o.insertOrder){
                 this.slots[index].setText(this.l.getSlot(x,y,z).getNameAndProperties());
                 if(_o.product.getNameAndProperty().equalsIgnoreCase("holz:balken")){
-                    this.slots[z == 0 ? index+12 : index-12].setText(this.l.getSlot(x,y,otherZ).getNameAndProperties());
+                    this.slots[i].setText(this.l.getSlot(x,y,otherZ).getNameAndProperties());
                 }
             } 
             else {
                 this.slots[index].setText(String.format("slot:%d_%d_%d", z, y, x));
                 if(_o.product.getNameAndProperty().equalsIgnoreCase("holz:balken")){
-                    this.slots[z == 0 ? index+12 : index-12].setText(String.format("slot:%d_%d_%d", otherZ, y, x));
+                    this.slots[i].setText(String.format("slot:%d_%d_%d", otherZ, y, x));
                 }
             }
             this.orderFulfilled = true;
@@ -293,10 +294,16 @@ public class Gui {
                 case "skip" -> skipOrder();
                 case "next" -> nextOrder();
                 case "move" -> {
-                    rearrangeMode = rearrangeMode ? false : true;
+                    rearrangeMode = !rearrangeMode;
+                    recycleMode = false;
+                    recycleBox.setSelected(false);
                     rearrangeSlot = new int[]{-1,-1,-1,-1};
                 }
-                case "recycle" -> recycleMode = recycleMode ? false : true;
+                case "recycle" -> {
+                    recycleMode = !recycleMode;
+                    rearrangeMode = false;
+                    rearrangeBox.setSelected(false);
+                }
                 default -> {
                     if(command.startsWith("slot:")){
                         int x = -1;
