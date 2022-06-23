@@ -1,8 +1,8 @@
 import product.*;
 
 public class Storage {
-    Product[][][] lager = new Product[2][3][4];
-    Balance balance;
+    final Product[][][] lager = new Product[2][3][4];
+    final Balance balance;
 
     /**
      * Lager enables storing of products at slots in a 3 dimensional product array.
@@ -13,9 +13,6 @@ public class Storage {
 
     /**
      * @param o Order class which includes the product which gets inserted at the given coordiantes
-     * @param posX
-     * @param posY
-     * @param posZ
      */
     public boolean update(Order o, int posX, int posY, int posZ){
         boolean feedback;
@@ -59,10 +56,13 @@ public class Storage {
             Logger.err("Slot is empty");
             return false;
         }
-        String feedback = String.format("[Auftrag: M] %s: -100€ (Move)", p.getNameAndProperties().replace(":", " "), 300);
+        String feedback = String.format("[Auftrag: M] %s: -100€ (Move)", p.getNameAndProperties().replace(":", " "));
         boolean feedbackRemove = this.removeInternal(p, targetX, targetY, targetZ);
         boolean feedbackInsert = this.insertInternal(p, destX, destY, destZ);
-        if(feedbackRemove && feedbackInsert) this.balance.updateBalance(300, feedback,  true);
+        if(!feedbackInsert){
+            this.insertInternal(p, targetX, targetY, targetZ);
+        }
+        if(feedbackRemove && feedbackInsert) this.balance.updateBalance(100, feedback,  true);
         return feedbackRemove && feedbackInsert;
     }
 
@@ -163,7 +163,7 @@ public class Storage {
             Logger.err("Can't recycle an empty slot");
             return false;
         }
-        String feedback = String.format("[Auftrag: R] %s: -300€ (Recycling)", p.getNameAndProperties().replace(":", " "), 300);
+        String feedback = String.format("[Auftrag: R] %s: -300€ (Recycling)", p.getNameAndProperties().replace(":", " "));
         this.balance.updateBalance(300, feedback,  true);
         boolean f = this.removeInternal(p, posX, posY, posZ);
         if(f) Logger.suc("Recycled Item at ["+ posZ + "][" + posY + "][" + posX + "]: " + p.getNameAndProperties());

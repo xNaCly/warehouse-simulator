@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Balance {
     private int balance;
-    private ArrayList<String> transactions = new ArrayList<>();
+    private final ArrayList<String> transactions = new ArrayList<>();
     private int cost;
     private int income;
 

@@ -17,16 +17,14 @@ public class Logger {
     }
 
     /**
-     * prints text to stdout with INFO as the prefix 
-     * @param text 
+     * prints text to stdout with INFO as the prefix
      */
     static void inf(String text){
         if(!silent) System.out.printf("[INFO][%s]: %s\n", Logger.getDate(), text);
     }
 
     /**
-     * prints text to stdout with TEST as the prefix 
-     * @param text 
+     * prints text to stdout with TEST as the prefix
      */
     static void test(String text){
         Logger.curTest++;
@@ -36,7 +34,6 @@ public class Logger {
     /**
      * prints text to stdout with ERROR as the prefix 
      * (Only logging method exempt from the '--silent' flag)
-     * @param text 
      */
     static void err(String text){
         int line = Thread.currentThread().getStackTrace()[2].getLineNumber();
@@ -47,8 +44,7 @@ public class Logger {
     }
 
     /**
-     * prints text to stdout with SUCCESS as the prefix 
-     * @param text 
+     * prints text to stdout with SUCCESS as the prefix
      */
     static void suc(String text){
         if(!silent) System.out.printf("[SUCCESS][%s]: %s\n", Logger.getDate(), text);
@@ -56,7 +52,6 @@ public class Logger {
 
     /**
      * prints text to stdout with DEBUG as the prefix (only prints if '--debug' flag is specified)
-     * @param text 
      */
     static void debug(String text){
         int line = Thread.currentThread().getStackTrace()[2].getLineNumber();

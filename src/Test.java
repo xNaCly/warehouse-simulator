@@ -119,7 +119,6 @@ public class Test {
         } else {
             Logger.err("Test blocking order failed");
             Test.failedTests++;
-            return;
         }
     }
 

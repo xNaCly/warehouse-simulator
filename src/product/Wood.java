@@ -1,7 +1,5 @@
 package product;
 
-import java.util.Objects;
-
 enum WoodType {
     KIEFER,
     BUCHE,

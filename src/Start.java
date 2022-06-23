@@ -1,6 +1,3 @@
-import java.util.Scanner;
-import java.util.ArrayList;
-
 public class Start {
     static String path;
     static boolean debug;
