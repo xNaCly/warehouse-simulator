@@ -12,8 +12,8 @@ public class Gui {
     private JLabel currentOrder;
     private JFrame transactionsWindow;
     private final ArrayList<Order> o;
-    private int currentOrderIndex;
-    private boolean popOutActive;
+    private int currentOrderIndex; 
+    private boolean popOutActive; 
     private final JButton[] slots = new JButton[24];
     private boolean rearrangeMode;
     private boolean recycleMode;
@@ -213,17 +213,19 @@ public class Gui {
         JButton slot = this.slots[i];
         String prod = slot.getText();
 
-        if(prod.contains("BALKEN")){
-            int otherZ = z == 0 ? 1 : 0;
-            this.slots[z == 0 ? i+12 : i-12].setText(String.format("slot:%d_%d_%d", otherZ, y, x));
-        }
+        boolean feedback = this.l.recycle(x, y, z);
 
-        this.l.recycle(x, y, z);
-        slot.setText(String.format("slot:%d_%d_%d", z, y, x));
-        this.rerenderHud();
-        if(this.popOutActive){
-            this.destroyTransactionsWindow();
-            this.popOutTransactions();
+        if(feedback){
+            if(prod.contains("BALKEN")){
+                int otherZ = z == 0 ? 1 : 0;
+                this.slots[z == 0 ? i+12 : i-12].setText(String.format("slot:%d_%d_%d", otherZ, y, x));
+            }
+            slot.setText(String.format("slot:%d_%d_%d", z, y, x));
+            this.rerenderHud();
+            if(this.popOutActive){
+                this.destroyTransactionsWindow();
+                this.popOutTransactions();
+            }
         }
     }
 

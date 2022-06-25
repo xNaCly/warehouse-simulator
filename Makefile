@@ -17,5 +17,6 @@ pre:
 
 clean:
 	rm -r $(BIN_DIR)
+	rm -r ./out
 
 .PHONY: clean pre build all

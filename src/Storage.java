@@ -130,7 +130,7 @@ public class Storage {
 
         // check if the selected slot is blocked by a pallet in the front shelf
         if(posZ != 0 && this.lager[0][posY][posX] != null){
-            Logger.err("Slot ["+ posZ + "][" + posY + "][" + posX + "] is occupied");
+            Logger.err("Slot ["+ posZ + "][" + posY + "][" + posX + "] is blocked");
             return false;
         }
 
@@ -163,10 +163,12 @@ public class Storage {
             Logger.err("Can't recycle an empty slot");
             return false;
         }
-        String feedback = String.format("[Auftrag: R] %s: -300€ (Recycling)", p.getNameAndProperties().replace(":", " "));
-        this.balance.updateBalance(300, feedback,  true);
         boolean f = this.removeInternal(p, posX, posY, posZ);
-        if(f) Logger.suc("Recycled Item at ["+ posZ + "][" + posY + "][" + posX + "]: " + p.getNameAndProperties());
+        if(f){
+            String feedback = String.format("[Auftrag: R] %s: -300€ (Recycling)", p.getNameAndProperties().replace(":", " "));
+            this.balance.updateBalance(300, feedback,  true);
+            Logger.suc("Recycled Item at ["+ posZ + "][" + posY + "][" + posX + "]: " + p.getNameAndProperties());
+        }
         return f;
     }
 
