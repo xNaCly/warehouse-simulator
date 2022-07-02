@@ -14,8 +14,7 @@ public class Test {
     static int successfullTests;
 
     public static void main(String[] args){
-        Logger.silent = true;
-        Logger.debug = false;
+        Logger.debug = true;
         Logger.headless = true;
         Test.initBalance();
         Test.initLager();
@@ -26,6 +25,7 @@ public class Test {
         Test.removeOrder();
         Test.blocking();
         Test.move();
+        Test.moveBALKEN();
         Test.trashProduct();
         Test.end();
     }
@@ -129,6 +129,21 @@ public class Test {
         boolean f1 = Test.l.getSlot(1,1,1).equals(_o.product);
         if(!f || !f1){
             Logger.err("Test move product failed");
+            Test.failedTests++;
+            return;
+        }
+        Test.successfullTests++;
+        Logger.test("move product Test success");
+    }
+
+    private static void moveBALKEN(){
+        Order _o = Test.o.get(3);
+        Test.l.update(_o, 0,0,0);
+        boolean f = Test.l.rearrange(0,0,0,0,1,1);
+        boolean f1 = Test.l.getSlot(0,1,1).equals(_o.product);
+        boolean f2 = Test.l.getSlot(1,1,1).equals(_o.product);
+        if(!f || !f1 || !f2){
+            Logger.err("Test move BALKEN failed");
             Test.failedTests++;
             return;
         }

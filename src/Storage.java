@@ -51,19 +51,24 @@ public class Storage {
             Logger.err("Can't move product to the same slot");
             return false;
         }
+
         Product p = this.lager[targetZ][targetY][targetX];
         if(p == null){
-            Logger.err("Slot is empty");
+            Logger.err("Selected Slot is empty, couldn't be moved");
             return false;
         }
-        String feedback = String.format("[Auftrag: M] %s: -100€ (Move)", p.getNameAndProperties().replace(":", " "));
+
+        String feedbackString = String.format("[Auftrag: M] %s: -100€ (Move)", p.getNameAndProperties().replace(":", " "));
+
         boolean feedbackRemove = this.removeInternal(p, targetX, targetY, targetZ);
         boolean feedbackInsert = this.insertInternal(p, destX, destY, destZ);
-        if(!feedbackInsert){
-            this.insertInternal(p, targetX, targetY, targetZ);
-        }
-        if(feedbackRemove && feedbackInsert) this.balance.updateBalance(100, feedback,  true);
-        return feedbackRemove && feedbackInsert;
+
+        // if inserting removed product failed, reinsert the product at the old coords
+        if(!feedbackInsert) this.insertInternal(p, targetX, targetY, targetZ);
+        boolean feedback = feedbackRemove && feedbackInsert;
+
+        if(feedback) this.balance.updateBalance(100, feedbackString,  true);
+        return feedback;
     }
 
     private boolean insertInternal(Product p, int posX, int posY, int posZ){
@@ -145,7 +150,7 @@ public class Storage {
         if(p.getNameAndProperty().equals("Holz:BALKEN")){
             int otherZ = posZ == 1 ? 0 : 1;
             if(this.lager[otherZ][posY][posX] == null){
-                Logger.err("Slot ["+ posZ + "][" + posY + "][" + posX + "] already empty");
+                Logger.err("Slot ["+ otherZ + "][" + posY + "][" + posX + "] already empty");
                 return false;
             } else this.lager[otherZ][posY][posX] = null;
         }

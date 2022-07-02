@@ -196,14 +196,22 @@ public class Gui {
         return this.o.get(this.currentOrderIndex);
     }
 
+    // TODO: this shit doesnt work!
     private void rearrangeSlot(int x, int y, int z, int i){
         if(rearrangeSlot[0] == -1 && rearrangeSlot[1] == -1 && rearrangeSlot[2] == -1){
             rearrangeSlot = new int[]{x,y,z,i};
         } else {
             boolean feedback = l.rearrange(rearrangeSlot[0], rearrangeSlot[1], rearrangeSlot[2], x, y, z);
             if(feedback){
+                String prod = this.slots[rearrangeSlot[3]].getText();
                 this.slots[rearrangeSlot[3]].setText(String.format("slot:%d_%d_%d", rearrangeSlot[2], rearrangeSlot[1], rearrangeSlot[0]));
                 this.slots[i].setText(this.l.getSlot(x,y,z).getNameAndProperties());
+                if(prod.contains("BALKEN")){
+                    int index1 = z == 0 ? rearrangeSlot[3] + 12 : rearrangeSlot[3] - 12;
+                    int index2 = z == 0 ? i + 12 : i - 12;
+                    this.slots[index1].setText(String.format("slot:%d_%d_%d", z == 0 ? rearrangeSlot[0] + 12 : rearrangeSlot[0] - 12, rearrangeSlot[1], rearrangeSlot[0]));
+                    this.slots[index2].setText(this.l.getSlot(x,y, z == 0 ? z + 12 : z - 12 ).getNameAndProperties());
+                }
             }
             rearrangeSlot = new int[]{-1,-1,-1,-1};
         }
@@ -252,8 +260,8 @@ public class Gui {
                 }
             }
             this.orderFulfilled = true;
+            this.rerenderHud();
         }
-        this.rerenderHud();
         if(this.popOutActive){
             this.destroyTransactionsWindow();
             this.popOutTransactions();
