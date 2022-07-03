@@ -140,9 +140,7 @@ public class Test {
         Order _o = Test.o.get(3);
         Test.l.update(_o, 0,0,0);
         boolean f = Test.l.rearrange(0,0,0,0,1,1);
-        boolean f1 = Test.l.getSlot(0,1,1).equals(_o.product);
-        boolean f2 = Test.l.getSlot(1,1,1).equals(_o.product);
-        if(!f || !f1 || !f2){
+        if(f){
             Logger.err("Test move BALKEN failed");
             Test.failedTests++;
             return;

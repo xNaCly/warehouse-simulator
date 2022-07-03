@@ -57,6 +57,10 @@ public class Storage {
             Logger.err("Selected Slot is empty, couldn't be moved");
             return false;
         }
+        if(p.getNameAndProperty().contains("BALKEN")){
+            Logger.err("Can't rearrange Wood of type BALKEN");
+            return false;
+        }
 
         String feedbackString = String.format("[Auftrag: M] %s: -100€ (Move)", p.getNameAndProperties().replace(":", " "));
 
