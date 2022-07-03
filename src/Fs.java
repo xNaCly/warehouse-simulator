@@ -76,7 +76,7 @@ public class Fs {
             case "holz" -> p = new Wood(sl[3], sl[4]);
             default -> {
                 p = new Product();
-                p.setName("Unknown");
+                p.setName("empty");
                 Logger.err("Product at index: " + (index + 1) + " is unknown");
             }
         }

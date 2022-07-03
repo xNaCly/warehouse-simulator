@@ -1,5 +1,7 @@
 package product;
 
+import javax.swing.*;
+
 enum WoodType {
     KIEFER,
     BUCHE,
@@ -44,5 +46,10 @@ public class Wood extends Product {
     @Override
     public String toString(){
         return this.name;
+    }
+
+    @Override
+    public ImageIcon getIcon(){
+        return new ImageIcon("../assets/holz.png");
     }
 }

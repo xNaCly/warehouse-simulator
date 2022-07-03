@@ -4,7 +4,7 @@ This Java project was created in the second semester of [university](https://www
 [orders](./Leistungsnachweis.csv) in csv format and simulates a simplified warehouse workflow allowing you to manage
 orders by moving pallets of products into empty slots in the storage, moving pallets of products out of the storage,
 recycling pallets and rearranging them. Adding and removing pallets from the storage increase your bounty for the amount
-specified in the order, recycling pallets deducts 300€ and moving pallets around in the storage costs 100€
+specified in the order, recycling pallets deducts 300€ and moving pallets around in the storage costs 100€.
 
 ## Run locally:
 
@@ -38,6 +38,8 @@ Use `CSV` to specify a custom .csv file:
 ```bash
 make all CSV="../../Test.csv"
 ```
+
+Use `make test` to run tests.
 
 ## Cli reference:
 - `-s` / `--silent` to suppress any logs (except errors)

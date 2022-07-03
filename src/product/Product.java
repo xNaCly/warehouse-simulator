@@ -1,5 +1,7 @@
 package product;
 
+import javax.swing.*;
+
 public class Product {
     String name;
     public Product() {
@@ -15,6 +17,10 @@ public class Product {
 
     public String getNameAndProperties(){
         return this.name;
+    }
+
+    public ImageIcon getIcon(){
+        return new ImageIcon("../assets/empty.png");
     }
 
     @Override

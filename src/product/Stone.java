@@ -1,5 +1,7 @@
 package product;
 
+import javax.swing.*;
+
 enum StoneType {
     MARMOR,
     GRANIT,
@@ -7,9 +9,9 @@ enum StoneType {
 }
 
 enum StoneWeight {
-    LIGHT,
-    MIDDLE,
-    HEAVY,
+    LEICHT,
+    MITTELSCHWER,
+    SCHWER,
 }
 
 public class Stone extends Product {
@@ -26,9 +28,9 @@ public class Stone extends Product {
         }
 
         switch (weight.toLowerCase()) {
-            case "mittel" -> this.stoneWeight = StoneWeight.MIDDLE;
-            case "schwer" -> this.stoneWeight = StoneWeight.HEAVY;
-            case "leicht" -> this.stoneWeight = StoneWeight.LIGHT;
+            case "mittel" -> this.stoneWeight = StoneWeight.MITTELSCHWER;
+            case "schwer" -> this.stoneWeight = StoneWeight.SCHWER;
+            case "leicht" -> this.stoneWeight = StoneWeight.LEICHT;
         }
     }
 
@@ -45,5 +47,10 @@ public class Stone extends Product {
     @Override
     public String toString(){
         return this.name;
+    }
+
+    @Override
+    public ImageIcon getIcon(){
+        return new ImageIcon("../assets/stein.png");
     }
 }

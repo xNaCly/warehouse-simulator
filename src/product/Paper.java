@@ -1,14 +1,16 @@
 package product;
 
+import javax.swing.*;
+
 enum PaperColor {
-    WHITE,
-    GREEN,
-    BLUE,
+    WEISS,
+    GRUEN,
+    BLAU,
 }
 enum PaperSize {
     A3,
     A4,
-    A5
+    A5,
 }
 
 public class Paper extends Product {
@@ -19,9 +21,9 @@ public class Paper extends Product {
         this.name = "Papier";
 
         switch (color.toLowerCase()) {
-            case "blau" -> this.paperColor = PaperColor.BLUE;
-            case "gruen" -> this.paperColor = PaperColor.GREEN;
-            case "weiss" -> this.paperColor = PaperColor.WHITE;
+            case "blau" -> this.paperColor = PaperColor.BLAU;
+            case "gruen" -> this.paperColor = PaperColor.GRUEN;
+            case "weiss" -> this.paperColor = PaperColor.WEISS;
         }
 
         switch (size.toLowerCase()) {
@@ -44,4 +46,10 @@ public class Paper extends Product {
     public String toString(){
         return this.name;
     }
+
+    @Override
+    public ImageIcon getIcon(){
+        return new ImageIcon("../assets/papier.png");
+    }
+
 }

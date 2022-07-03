@@ -88,10 +88,12 @@ public class Gui {
         JTable jt = new JTable(data, headerRow);
         JScrollPane jp = new JScrollPane(jt);
         JPanel container = new JPanel();
-        JLabel incomeLabel = new JLabel("Umsätze: " + this.b.getIncome());
-        JLabel costLabel = new JLabel("Kosten: " + this.b.getCost());
+        JLabel incomeLabel = new JLabel("Umsätze: " + this.b.getIncome() + "€");
+        JLabel costLabel = new JLabel("Kosten: " + this.b.getCost() + "€");
+        JLabel totalLabel = new JLabel("Gesamt: " + this.b.getBalance() + "€");
         container.add(incomeLabel);
         container.add(costLabel);
+        container.add(totalLabel);
         this.transactionsWindow.add(jp, BorderLayout.NORTH);
         this.transactionsWindow.add(container, BorderLayout.SOUTH);
 
@@ -110,9 +112,12 @@ public class Gui {
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
         this.balanceLabel = new JLabel();
+        this.balanceLabel.setIcon(new ImageIcon("../assets/dollar.png"));
         this.currentOrder = new JLabel();
+        this.currentOrder.setIcon(new ImageIcon("../assets/list.png"));
         container.add(this.currentOrder, BorderLayout.EAST);
         container.add(this.balanceLabel, BorderLayout.WEST);
+        container.setBorder(BorderFactory.createTitledBorder("Hud"));
         this.r.add(container, BorderLayout.NORTH);
         this.rerenderHud();
     }
@@ -129,13 +134,16 @@ public class Gui {
         JPanel jp = new JPanel();
         JPanel jp1 = new JPanel();
         jp1.setLayout(new GridLayout(3, 4));
+        jp1.setBorder(BorderFactory.createTitledBorder("Vorderes Regal"));
         JPanel jp2 = new JPanel();
         jp2.setLayout(new GridLayout(3, 4));
+        jp2.setBorder(BorderFactory.createTitledBorder("Hinteres Regal"));
         for(int i = 0, z = 0; z < 2; z++){
             for(int y = 2; y > -1; y--){
                 for(int x = 0; x < 4; x++){
                     String s = String.format("slot:%d_%d_%d_%d", z,y,x,i);
-                    JButton jb = new JButton(s.substring(0, 10));
+                    JButton jb = new JButton();
+                    jb.setIcon(new ImageIcon("../assets/empty.png"));
                     jb.setActionCommand(s);
                     jb.addActionListener(new ButtonClickListener());
                     Logger.debug("new "+s);
@@ -156,11 +164,15 @@ public class Gui {
     private void renderButtons(){
         JPanel container = new JPanel();
         container.setLayout(new GridLayout());
+        container.setBorder(BorderFactory.createTitledBorder("Produkt Managment"));
         this.rearrangeBox = new JCheckBox("Verschiebe Modus");
         this.recycleBox = new JCheckBox("Verschrotten Modus");
         JButton transactionButton = new JButton("Bilanz");
+        transactionButton.setIcon(new ImageIcon("../assets/balance.png"));
         JButton skipOrder = new JButton("Auftrag ablehnen");
+        skipOrder.setIcon(new ImageIcon("../assets/block.png"));
         JButton nextOrder = new JButton("Neuer Auftrag");
+        nextOrder.setIcon(new ImageIcon("../assets/new.png"));
 
         this.rearrangeBox.setActionCommand("move");
         this.rearrangeBox.setSize(250, 50);
@@ -196,22 +208,14 @@ public class Gui {
         return this.o.get(this.currentOrderIndex);
     }
 
-    // TODO: this shit doesnt work!
     private void rearrangeSlot(int x, int y, int z, int i){
         if(rearrangeSlot[0] == -1 && rearrangeSlot[1] == -1 && rearrangeSlot[2] == -1){
             rearrangeSlot = new int[]{x,y,z,i};
         } else {
             boolean feedback = l.rearrange(rearrangeSlot[0], rearrangeSlot[1], rearrangeSlot[2], x, y, z);
             if(feedback){
-                String prod = this.slots[rearrangeSlot[3]].getText();
-                this.slots[rearrangeSlot[3]].setText(String.format("slot:%d_%d_%d", rearrangeSlot[2], rearrangeSlot[1], rearrangeSlot[0]));
+                this.slots[rearrangeSlot[3]].setText("");
                 this.slots[i].setText(this.l.getSlot(x,y,z).getNameAndProperties());
-                if(prod.contains("BALKEN")){
-                    int index1 = z == 0 ? rearrangeSlot[3] + 12 : rearrangeSlot[3] - 12;
-                    int index2 = z == 0 ? i + 12 : i - 12;
-                    this.slots[index1].setText(String.format("slot:%d_%d_%d", z == 0 ? rearrangeSlot[0] + 12 : rearrangeSlot[0] - 12, rearrangeSlot[1], rearrangeSlot[0]));
-                    this.slots[index2].setText(this.l.getSlot(x,y, z == 0 ? z + 12 : z - 12 ).getNameAndProperties());
-                }
             }
             rearrangeSlot = new int[]{-1,-1,-1,-1};
         }
@@ -225,10 +229,12 @@ public class Gui {
 
         if(feedback){
             if(prod.contains("BALKEN")){
-                int otherZ = z == 0 ? 1 : 0;
-                this.slots[z == 0 ? i+12 : i-12].setText(String.format("slot:%d_%d_%d", otherZ, y, x));
+                int index = z == 0 ? i+12 : i-12;
+                this.slots[index].setText("");
+                this.slots[index].setIcon(new ImageIcon("../assets/empty.png"));
             }
-            slot.setText(String.format("slot:%d_%d_%d", z, y, x));
+            slot.setText("");
+            slot.setIcon(new ImageIcon("../assets/empty.png"));
             this.rerenderHud();
             if(this.popOutActive){
                 this.destroyTransactionsWindow();
@@ -249,14 +255,17 @@ public class Gui {
             int i = z == 0 ? index + 12 : index - 12;
             if(_o.insertOrder){
                 this.slots[index].setText(this.l.getSlot(x,y,z).getNameAndProperties());
+                this.slots[index].setIcon(_o.product.getIcon());
                 if(_o.product.getNameAndProperty().equalsIgnoreCase("holz:balken")){
                     this.slots[i].setText(this.l.getSlot(x,y,otherZ).getNameAndProperties());
+                    this.slots[i].setIcon(_o.product.getIcon());
                 }
-            } 
-            else {
-                this.slots[index].setText(String.format("slot:%d_%d_%d", z, y, x));
+            } else { 
+                this.slots[index].setText("");
+                this.slots[index].setIcon(new ImageIcon("../assets/empty.png"));
                 if(_o.product.getNameAndProperty().equalsIgnoreCase("holz:balken")){
-                    this.slots[i].setText(String.format("slot:%d_%d_%d", otherZ, y, x));
+                    this.slots[i].setText("");
+                    this.slots[i].setIcon(new ImageIcon("../assets/empty.png"));
                 }
             }
             this.orderFulfilled = true;

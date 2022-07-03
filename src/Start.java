@@ -2,7 +2,6 @@ public class Start {
     static String path;
     static boolean debug;
     static boolean silent;
-    static boolean headless;
 
     public static void main(String[] args){
         Start.parseArgs(args);

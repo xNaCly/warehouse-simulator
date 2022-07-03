@@ -112,13 +112,13 @@ public class Storage {
                 return false;
             }
         } else if(prodName.equals("Stein")) {
-            if(prodAtt.equals("HEAVY")){
+            if(prodAtt.equals("SCHWER")){
                 // HEAVY stones can only be stored in the bottommost row
                 if(posY != 0){
                     Logger.err("Stein of type HEAVY can only be stored in the bottommost row");
                     return false;
                 }
-            } else if(prodAtt.equals("MIDDLE")){
+            } else if(prodAtt.equals("MITTELSCHWER")){
                 // MIDDLE stones can not be stored in the topmost row
                 if(posY == 2){
                     Logger.err("Stein of type MIDDLE can't be stored in the topmost row");
